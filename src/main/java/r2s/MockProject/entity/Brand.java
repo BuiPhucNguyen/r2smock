@@ -13,8 +13,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "collection")
-public class Collection {
+@Table(name = "brand")
+public class Brand {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", columnDefinition = "bigint(20)")
@@ -22,6 +22,6 @@ public class Collection {
 	@Column(name = "name", columnDefinition = "varchar(255)")
 	private String name;
 	
-	@OneToMany(mappedBy = "collection")
+	@OneToMany(mappedBy = "brand")
 	private List<Product> products;
 }

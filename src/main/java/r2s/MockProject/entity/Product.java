@@ -24,8 +24,8 @@ public class Product {
 	private Integer id;
 	
 	@ManyToOne
-	@JoinColumn(name = "collection_id", referencedColumnName = "id")
-	private Collection collection;
+	@JoinColumn(name = "brand_id", referencedColumnName = "id")
+	private Brand brand;
 	
 	@Column(name = "name", columnDefinition = "varchar(255)")
 	private String name;
@@ -41,6 +41,9 @@ public class Product {
 	
 	@Column(name = "stock", columnDefinition = "bigint(20)")
 	private Integer stock;
+	
+	@Column(name = "status", columnDefinition = "boolean")
+	private Boolean status;
 	
 	@OneToMany(mappedBy = "product")
 	private List<OrderDetail> orderDetails;
