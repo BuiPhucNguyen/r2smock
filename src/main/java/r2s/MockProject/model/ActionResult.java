@@ -7,5 +7,4 @@ import r2s.MockProject.enums.ErrorCodeEnum;
 public class ActionResult {
 	private ErrorCodeEnum errorCodeEnum = ErrorCodeEnum.OK;
 	private Object data;
-
 }
