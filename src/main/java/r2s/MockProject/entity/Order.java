@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import r2s.MockProject.enums.OrderStatusEnum;
 
 @Data
 @Entity
@@ -53,5 +54,5 @@ public class Order {
 	private String note;
 	
 	@Column(name = "status", columnDefinition = "varchar(255)")
-	private String status;
+	private OrderStatusEnum status;
 }
