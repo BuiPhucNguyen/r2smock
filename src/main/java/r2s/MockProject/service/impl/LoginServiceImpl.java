@@ -62,6 +62,16 @@ public class LoginServiceImpl implements LoginService {
 	public ActionResult signup(SignUpDto signup) {
 		ActionResult result = new ActionResult();
 		
+		if (accountRepository.findByUsername(signup.getUsername())!=null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.EXISTED_USERNAME_ACCOUNT);
+			return result;
+		}
+		
+		if (accountRepository.findByEmail(signup.getEmail())!=null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.EXISTED_EMAIL_ACCOUNT);
+			return result;
+		}
+		
 		Account account = new Account();
 		
 		account.setFirstName(signup.getFirstName());
@@ -69,6 +79,7 @@ public class LoginServiceImpl implements LoginService {
 		account.setEmail(signup.getEmail());
 		account.setUserName(signup.getUsername());
 		account.setPassword(passwordEncoder.encode(signup.getPassword()));
+		
 		account.setStatus(true);
 		account.setCreatedDate(new Date());
 		

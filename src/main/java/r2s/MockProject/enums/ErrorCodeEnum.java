@@ -14,6 +14,8 @@ public enum ErrorCodeEnum {
 	INVALID_DELETE(400, 40004, "Delete not success, entity is used"),
 	INVALID_UPDATE(400, 40003, "Update not success"),
 	INVALID_ENTITY_ACTIVE(400, 40005, "Entity not active"),
+	EXISTED_EMAIL_ACCOUNT(400, 40006, "This email is registered"),
+	EXISTED_USERNAME_ACCOUNT(400, 40007, "This username is registered"),
     INTERNAL_SERVER_ERROR(500, 50000, "Internal Server Error"),
     FORBIDDEN(403, 403, "Access is denied"),
     UNAUTHORIZED(401, 401, "Not authenticated"),;

@@ -13,7 +13,7 @@ public class ResponseModel implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final HttpStatus status;
+	private HttpStatus status;
 	private int code;
 	private String message;
 	private final long time = System.currentTimeMillis();
