@@ -31,6 +31,7 @@ public class BrandServiceImpl implements BrandService {
             result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
             return result;
         }
+
         List<BrandModel> brandModels = brands.stream().map(BrandModel::transform).collect(Collectors.toList());
         
         BrandOutDto brandOutDto = new BrandOutDto();
@@ -112,7 +113,6 @@ public class BrandServiceImpl implements BrandService {
         }
         brandReponsitory.delete(brand);
         result.setData(brandDelete);
-
         return result;
     }
 }

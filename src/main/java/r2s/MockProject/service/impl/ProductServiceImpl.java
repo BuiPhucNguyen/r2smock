@@ -5,15 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import r2s.MockProject.entity.Brand;
 import r2s.MockProject.entity.Product;
 import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
+import r2s.MockProject.model.dto.ProductInDto;
 import r2s.MockProject.model.dto.ProductOutDto;
 import r2s.MockProject.model.entity.ProductModel;
+import r2s.MockProject.repository.BrandReponsitory;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,68 +25,92 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductReponsitory productReponsitory;
+
+    @Autowired
+    private BrandReponsitory brandReponsitory;
+
     @Override
     public ActionResult getAll(Integer page, Integer size) {
+        // Integer page, Integer size
         ActionResult result = new ActionResult();
+
         Page<Product> productPage = productReponsitory.findAll(PageRequest.of(page - 1, size));
+
         if (productPage.isEmpty()){
-            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
             return result;
         }
-        List<ProductModel> productModels = productPage.get().map(ProductModel::transform).collect(Collectors.toList());
+
+        List<ProductModel> productModels = productPage.stream().map(ProductModel::transform).collect(Collectors.toList());
+
+        if (productModels.isEmpty()){
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
         ProductOutDto OutDto = new ProductOutDto();
         OutDto.setProductModels(productModels);
-        OutDto.setTotal(productPage.getNumberOfElements());
+        OutDto.setTotal(productModels.size());
+
         result.setData(OutDto);
-        result.setErrorCodeEnum(ErrorCodeEnum.OK);
         return result;
     }
 
     @Override
     public ActionResult getById(Integer id) {
         ActionResult result = new ActionResult();
-        List<Product> products = new ArrayList<>();
         Product product = productReponsitory.getProductById(id);
         if (product == null){
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
-        products.add(product);
-        List<ProductModel> productModels = products.stream().map(ProductModel::transform).collect(Collectors.toList());
-        ProductOutDto productOutDto = new ProductOutDto();
-        productOutDto.setProductModels(productModels);
-        productOutDto.setTotal(products.size());
-        result.setData(productOutDto);
-        result.setErrorCodeEnum(ErrorCodeEnum.OK);
+
+        result.setData(ProductModel.transform(product));
         return result;
     }
 
     @Override
-    public ActionResult create(Product product) {
+    public ActionResult create(ProductInDto productIn) {
         ActionResult result = new ActionResult();
-        Product productTemp = productReponsitory.save(product);
-        if (productTemp == null){
+        Brand brand = new Brand();
+        Product product = new Product();
+
+        brand = brandReponsitory.getBrandById(productIn.getBrandId());
+        if (brand == null) {
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_HAVE_ID_BRAND);
+            return result;
+        }
+        product.setBrand(brand);
+        product.setName(productIn.getName());
+        product.setDescription(productIn.getDescription());
+        product.setPrice(productIn.getPrice());
+        product.setSold(0);
+        product.setStock(0);
+        product.setStatus(false);
+
+        product = productReponsitory.save(product);
+        if (product == null){
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_CREATE);
             return result;
         }
-        result.setErrorCodeEnum(ErrorCodeEnum.OK);
-        result.setData(productTemp);
+        result.setData(ProductModel.transform(product));
         return result;
     }
 
     @Override
-    public ActionResult update(Product product, Integer id) {
+    public ActionResult update(ProductInDto productIn, Integer id) {
         ActionResult result = new ActionResult();
         Product updateP = productReponsitory.getProductById(id);
         if (updateP == null){
-            result.setErrorCodeEnum(ErrorCodeEnum.OK);
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
-        updateP.setName(product.getName());
-        updateP.setDescription(product.getDescription());
-        updateP.setPrice(product.getPrice());
-        result.setErrorCodeEnum(ErrorCodeEnum.OK);
-        result.setData(updateP);
+        updateP.setName(productIn.getName());
+        updateP.setDescription(productIn.getDescription());
+        updateP.setPrice(productIn.getPrice());
+//        productReponsitory.save(updateP);
+        Product product = productReponsitory.save(updateP);
+
+        result.setData(ProductModel.transform(product));
         return result;
     }
 
@@ -93,12 +119,12 @@ public class ProductServiceImpl implements ProductService {
         ActionResult result = new ActionResult();
         Product updateP = productReponsitory.getProductById(id);
         if (updateP == null){
-            result.setErrorCodeEnum(ErrorCodeEnum.OK);
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
-        updateP.setStock(updateP.getStock()+addStock);
-        result.setErrorCodeEnum(ErrorCodeEnum.OK);
-        result.setData(updateP);
+        updateP.setStock(updateP.getStock() + addStock);
+        productReponsitory.save(updateP);
+        result.setData(ProductModel.transform(updateP));
         return result;
     }
 
@@ -107,12 +133,12 @@ public class ProductServiceImpl implements ProductService {
         ActionResult result = new ActionResult();
         Product updateP = productReponsitory.getProductById(id);
         if (updateP == null){
-            result.setErrorCodeEnum(ErrorCodeEnum.OK);
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
         updateP.setStatus(status);
-        result.setErrorCodeEnum(ErrorCodeEnum.OK);
-        result.setData(updateP);
+        productReponsitory.save(updateP);
+        result.setData(ProductModel.transform(updateP));
         return result;
     }
 }

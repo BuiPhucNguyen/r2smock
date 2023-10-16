@@ -2,15 +2,15 @@ package r2s.MockProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import r2s.MockProject.entity.Product;
 import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.ResponseBuild;
 import r2s.MockProject.model.ResponseModel;
+import r2s.MockProject.model.dto.ProductInDto;
 import r2s.MockProject.service.ProductService;
 
 @RestController
-@RequestMapping(name = "/product")
+@RequestMapping(path = "/products")
 public class ProductController {
 
     @Autowired
@@ -21,6 +21,7 @@ public class ProductController {
 
     @GetMapping("/")
     public ResponseModel  getAll(@RequestParam Integer page,@RequestParam Integer size){
+        // @RequestParam Integer page,@RequestParam Integer size
         ActionResult result = null;
         try {
             result = productService.getAll(page, size);
@@ -41,11 +42,11 @@ public class ProductController {
         return responseBuild.build(result);
     }
 
-    @PutMapping("/")
-    public ResponseModel create(@RequestBody Product product){
+    @PostMapping("/")
+    public ResponseModel create(@RequestBody ProductInDto productIn){
         ActionResult result = null;
         try {
-            result = productService.create(product);
+            result = productService.create(productIn);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }
@@ -53,18 +54,18 @@ public class ProductController {
     }
 
 
-    @PostMapping("/{id}")
-    public ResponseModel update(@RequestBody Product product, @PathVariable Integer id){
+    @PutMapping("/{id}")
+    public ResponseModel update(@RequestBody ProductInDto productIn, @PathVariable Integer id){
         ActionResult result = null;
         try {
-            result = productService.update(product, id);
+            result = productService.update(productIn, id);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }
         return responseBuild.build(result);
     }
 
-    @PostMapping("/{id}+{add}")
+    @PutMapping("/stock/{id}_{add}")
     public ResponseModel updateStock(@PathVariable Integer id,@PathVariable Integer add){
         ActionResult result = null;
         try {
@@ -75,7 +76,7 @@ public class ProductController {
         return responseBuild.build(result);
     }
 
-    @PostMapping("/{id}+{status}")
+    @PutMapping("/status/{id}_{status}")
     public ResponseModel updateStock(@PathVariable Integer id,@PathVariable boolean status){
         ActionResult result = null;
         try {
