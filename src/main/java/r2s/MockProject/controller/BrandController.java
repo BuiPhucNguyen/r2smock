@@ -2,15 +2,15 @@ package r2s.MockProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import r2s.MockProject.entity.Brand;
 import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.ResponseBuild;
 import r2s.MockProject.model.ResponseModel;
+import r2s.MockProject.model.dto.BrandInDto;
 import r2s.MockProject.service.BrandService;
 
 @RestController
-@RequestMapping(path = "/collection")
+@RequestMapping(path = "/brands")
 public class BrandController {
 
     @Autowired
@@ -42,7 +42,7 @@ public class BrandController {
     }
 
     @PostMapping("/")
-    public ResponseModel create(@RequestBody Brand brand){
+    public ResponseModel create(@RequestBody BrandInDto brand){
         ActionResult result = null;
         try {
             result = brandService.create(brand);
@@ -53,7 +53,7 @@ public class BrandController {
     }
 
     @PutMapping("/{id}")
-    public ResponseModel update(@RequestBody Brand brand, @PathVariable Integer id){
+    public ResponseModel update(@RequestBody BrandInDto brand, @PathVariable Integer id){
         ActionResult result = null;
         try {
             result = brandService.update(brand, id);

@@ -1,7 +1,7 @@
 package r2s.MockProject.service;
 
-import r2s.MockProject.entity.Brand;
 import r2s.MockProject.model.ActionResult;
+import r2s.MockProject.model.dto.BrandInDto;
 
 
 public interface BrandService {
@@ -9,9 +9,9 @@ public interface BrandService {
 
     ActionResult getById(Integer id);
 
-    ActionResult create(Brand brand);
+    ActionResult create(BrandInDto brand);
 
-    ActionResult update(Brand brand, Integer id);
+    ActionResult update(BrandInDto brand, Integer id);
 
     ActionResult delete(Integer id);
 }
