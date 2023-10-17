@@ -18,10 +18,18 @@ import r2s.MockProject.enums.OrderStatusEnum;
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.dto.OrderDetailInDto;
 import r2s.MockProject.model.dto.OrderInDto;
+import r2s.MockProject.model.dto.OrderOutDto;
+import r2s.MockProject.model.entity.OrderModel;
 import r2s.MockProject.repository.AccountRepository;
 import r2s.MockProject.repository.OrderRepository;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.OrderService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService{
@@ -34,8 +42,25 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public ActionResult getAllOrders(Integer page, Integer size) {
-		// TODO Auto-generated method stub
-		return null;
+		ActionResult result = new ActionResult();
+		Page<Order> ordersPage = orderRepository.findAll((PageRequest.of(page - 1, size)));
+		if (ordersPage.isEmpty()){
+			result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+			return result;
+		}
+
+		List<OrderModel> orderModels = ordersPage.stream().map(OrderModel::transform).collect(Collectors.toList());
+
+		if (orderModels.isEmpty()){
+			result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+			return result;
+		}
+		OrderOutDto OutDto = new OrderOutDto();
+
+		OutDto.setOrderModels(orderModels);
+		OutDto.setTotal(orderModels.size());
+		result.setData(OutDto);
+		return result;
 	}
 
 	@Override
