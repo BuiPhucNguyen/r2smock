@@ -116,4 +116,19 @@ public class OrderServiceImpl implements OrderService{
 		return result;
 	}
 
+	@Override
+	public ActionResult updateStatus(Integer id, OrderStatusEnum status) {
+		ActionResult result = new ActionResult();
+		Order order = orderRepository.getReferenceById(id);
+		if (order == null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+			return result;
+		}
+		order.setStatus(status.getStatus());
+		orderRepository.save(order);
+
+		result.setData(OrderModel.transform(order));
+		return result;
+	}
+
 }
