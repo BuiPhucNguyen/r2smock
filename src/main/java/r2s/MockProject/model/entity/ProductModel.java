@@ -2,7 +2,6 @@ package r2s.MockProject.model.entity;
 
 import lombok.Builder;
 import lombok.Data;
-import r2s.MockProject.entity.Brand;
 import r2s.MockProject.entity.Product;
 
 import java.math.BigDecimal;
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 @Builder
 public class ProductModel {
     private Integer id;
-    private Integer brandId;
+    private BrandModel brand;
     private String name;
     private String description;
     private BigDecimal price;
@@ -27,7 +26,7 @@ public class ProductModel {
                 .sold(product.getSold())
                 .stock(product.getStock())
                 .status(product.getStatus())
-                .brandId(product.getBrand().getId())
+                .brand(BrandModel.transform(product.getBrand()))
                 .build();
     }
 }
