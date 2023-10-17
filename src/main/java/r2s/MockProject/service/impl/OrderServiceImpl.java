@@ -68,7 +68,6 @@ public class OrderServiceImpl implements OrderService{
 		ActionResult result = new ActionResult();
 		
 		Account account = accountRepository.getAccountById(orderIn.getAccountId());
-		
 		if (account==null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
 			return result;

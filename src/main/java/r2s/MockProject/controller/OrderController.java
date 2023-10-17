@@ -1,10 +1,7 @@
 package r2s.MockProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
@@ -21,6 +18,16 @@ public class OrderController {
 	@Autowired
 	private ResponseBuild responseBuild;
 
+    @GetMapping("/")
+    public ResponseModel  getAll(@RequestParam Integer page,@RequestParam Integer size){
+        ActionResult result = null;
+        try {
+            result = orderService.getAllOrders(page, size);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
 	@PostMapping("/")
     public ResponseModel create(@RequestBody OrderInDto orderIn){
         ActionResult result = null;
