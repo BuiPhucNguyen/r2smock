@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
 		}
 
 		List<AccountModel> accountModels = pageResult.get()
-				.filter(a -> a.getId()!=1)
+//				.filter(a -> a.getId()!=1)
 				.map(AccountModel::transform).collect(Collectors.toList());
 
 		AccountOutDto outDto = new AccountOutDto();

@@ -6,6 +6,8 @@ import r2s.MockProject.entity.Order;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -15,6 +17,7 @@ public class OrderModel {
     private String address;
     private String phone;
     private Date date;
+    private List<OrderDetailModel> detailModels;
     private BigDecimal orderDetailsPrice;
     private BigDecimal shipPrice;
     private BigDecimal totalPrice;
@@ -22,11 +25,13 @@ public class OrderModel {
     private String status;
 
     public static OrderModel transform(Order order){
-        return OrderModel.builder().id(order.getId())
+        return OrderModel.builder()
+        		.id(order.getId())
                 .accountId(order.getAccount().getId())
                 .address(order.getAddress())
                 .phone(order.getPhone())
                 .date(order.getCreatedDate())
+                .detailModels(order.getOrderDetails().stream().map(OrderDetailModel::transform).collect(Collectors.toList()))
                 .orderDetailsPrice(order.getOrderDetailsPrice())
                 .shipPrice(order.getShipPrice())
                 .totalPrice(order.getTotalPrice())

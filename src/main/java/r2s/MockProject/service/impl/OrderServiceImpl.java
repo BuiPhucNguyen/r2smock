@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService{
 			BigDecimal pur = p.multiply(a);
 			orderDetail.setPurchasePrice(pur);
 			
-			orderDetailsPrice.add(pur);
+			orderDetailsPrice = orderDetailsPrice.add(pur);
 			
 			details.add(orderDetail);
 			
@@ -113,7 +113,7 @@ public class OrderServiceImpl implements OrderService{
 		order.setTotalPrice(orderDetailsPrice.add(orderIn.getShipPrice()));
 		
 		Order orderTemp = orderRepository.save(order);
-		result.setData(orderTemp);
+		result.setData(OrderModel.transform(orderTemp));
 		return result;
 	}
 
