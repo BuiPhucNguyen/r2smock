@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import r2s.MockProject.enums.OrderStatusEnum;
 
 @Data
 @Entity
@@ -38,7 +38,7 @@ public class Order {
 	@Column(name = "created_date", columnDefinition = "datetime")
 	private Date createdDate;
 	
-	@OneToMany(mappedBy = "order")
+	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
 	private List<OrderDetail> orderDetails;
 	
 	@Column(name = "order_details_price", columnDefinition = "decimal(15,2)")
@@ -54,5 +54,5 @@ public class Order {
 	private String note;
 	
 	@Column(name = "status", columnDefinition = "varchar(255)")
-	private OrderStatusEnum status;
+	private String status;
 }
