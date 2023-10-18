@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import jakarta.transaction.Transactional;
 import r2s.MockProject.entity.Account;
@@ -57,7 +58,7 @@ public class OrderServiceImpl implements OrderService{
 		}
 		OrderOutDto OutDto = new OrderOutDto();
 
-		OutDto.setOrderModels(orderModels);
+		OutDto.setOrders(orderModels);
 		OutDto.setTotal(orderModels.size());
 		result.setData(OutDto);
 		return result;
@@ -92,6 +93,18 @@ public class OrderServiceImpl implements OrderService{
 			OrderDetail orderDetail = new OrderDetail();
 			Product product = productReponsitory.getProductById(orderDetailInDto.getProductId());
 			
+			if (product.getStock() < orderDetailInDto.getAmount()) {
+				result.setErrorCodeEnum(ErrorCodeEnum.NO_ENOUGH_PRODUCT_STOCK);
+				
+				if (result.getErrorCodeEnum()!=ErrorCodeEnum.OK) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				}
+				return result;
+			} else {
+				product.setStock(product.getStock()-orderDetailInDto.getAmount());
+				productReponsitory.save(product);
+			}
+			
 			orderDetail.setOrder(order);
 			orderDetail.setProduct(product);
 			orderDetail.setAmount(orderDetailInDto.getAmount());
@@ -113,6 +126,10 @@ public class OrderServiceImpl implements OrderService{
 		
 		Order orderTemp = orderRepository.save(order);
 		result.setData(OrderModel.transform(orderTemp));
+		
+		if (result.getErrorCodeEnum()!=ErrorCodeEnum.OK) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
 		return result;
 	}
 
@@ -159,7 +176,7 @@ public class OrderServiceImpl implements OrderService{
 				.map(OrderModel::transform).collect(Collectors.toList());
 
 		OrderOutDto outDto = new OrderOutDto();
-		outDto.setOrderModels(orderModels);
+		outDto.setOrders(orderModels);
 		outDto.setTotal(pageResult.getNumberOfElements());
 
 		result.setData(outDto);

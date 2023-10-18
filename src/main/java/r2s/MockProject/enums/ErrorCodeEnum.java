@@ -8,7 +8,8 @@ import java.util.Map;
 public enum ErrorCodeEnum {
 	OK(200, 200, "OK"),
 	NO_CONTENT(204, 20401, "Not have data"),
-	NO_HAVE_ID_BRAND(204, 20401, "Not have data for brand"),
+	NO_HAVE_ID_BRAND(204, 20402, "Not have data for brand"),
+	NO_ENOUGH_PRODUCT_STOCK(204, 20403, "Not enough stock for product"),
 	BAD_REQUEST(400, 40000, "Bad request"),
 	INVALID_ENTITY(400, 40001, "Entity not exist"),
 	INVALID_CREATE(400, 40002, "Create not success"),
