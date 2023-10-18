@@ -16,6 +16,7 @@ import r2s.MockProject.entity.Account;
 import r2s.MockProject.entity.Role;
 import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
+import r2s.MockProject.model.dto.ChangePasswordDto;
 import r2s.MockProject.model.dto.LoginDto;
 import r2s.MockProject.model.dto.SignUpDto;
 import r2s.MockProject.model.entity.AccountModel;
@@ -45,16 +46,21 @@ public class LoginServiceImpl implements LoginService {
 		UserDetails userDetails = customUserDetailServiceImpl.loadUserByUsername(login.getUsername());
 
 		if (userDetails == null) {
-			result.setErrorCodeEnum(ErrorCodeEnum.UNAUTHORIZED);
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_USERNAME_OR_PASSWORD);
 			return result;
 		} else {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(),
-					login.getPassword(), userDetails.getAuthorities()));
+			try {
+				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(),
+						login.getPassword(), userDetails.getAuthorities()));
 
-			String token = JwtUtils.generateToken(userDetails.getUsername());
+				String token = JwtUtils.generateToken(userDetails.getUsername());
 
-			result.setData(token);
-			return result;
+				result.setData(token);
+				return result;
+			} catch (Exception e) {
+				result.setErrorCodeEnum(ErrorCodeEnum.INVALID_USERNAME_OR_PASSWORD);
+				return result;
+			}
 		}
 	}
 
@@ -96,6 +102,26 @@ public class LoginServiceImpl implements LoginService {
 		}
 		
 		result.setData(AccountModel.transform(accountResult));
+		return result;
+	}
+
+	@Override
+	public ActionResult changePassword(ChangePasswordDto changePassword) {
+		ActionResult result = new ActionResult();
+		
+		Account account = accountRepository.getAccountById(changePassword.getId());
+		if (account==null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+			return result;
+		}
+		
+		if (!passwordEncoder.matches(changePassword.getOldPassword(),account.getPassword())) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_OLD_PASSWORD);
+			return result;
+		}
+		
+		account.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+		result.setData(new String("Change password success"));
 		return result;
 	}
 }

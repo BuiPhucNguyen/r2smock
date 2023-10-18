@@ -18,9 +18,13 @@ public enum ErrorCodeEnum {
 	INVALID_ENTITY_ACTIVE(400, 40005, "Entity not active"),
 	EXISTED_EMAIL_ACCOUNT(400, 40006, "This email is registered"),
 	EXISTED_USERNAME_ACCOUNT(400, 40007, "This username is registered"),
+	CANT_CANCEL_COMPLETED_ODER(400, 40007, "Can't cancel completed order"),
+	CANT_COMPLETE_CANCELED_ODER(400, 40007, "Can't complete canceled order"),
     INTERNAL_SERVER_ERROR(500, 50000, "Internal Server Error"),
     FORBIDDEN(403, 403, "Access is denied"),
-    UNAUTHORIZED(401, 401, "Not authenticated"),;
+    UNAUTHORIZED(401, 401, "Not authenticated"),
+    INVALID_USERNAME_OR_PASSWORD(401, 402, "Username or password is incorrect"),
+    INVALID_OLD_PASSWORD(401, 403, "Old password is incorrect");
 
 	private static Map<Integer, ErrorCodeEnum> map = new HashMap<>();
 

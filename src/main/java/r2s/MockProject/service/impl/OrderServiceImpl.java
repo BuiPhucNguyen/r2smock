@@ -134,21 +134,6 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public ActionResult updateStatus(Integer id, OrderStatusEnum status) {
-		ActionResult result = new ActionResult();
-		Order order = orderRepository.getReferenceById(id);
-		if (order == null) {
-			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
-			return result;
-		}
-		order.setStatus(status.getStatus());
-		orderRepository.save(order);
-
-		result.setData(OrderModel.transform(order));
-		return result;
-	}
-
-	@Override
 	public ActionResult findOrderById(Integer id) {
 		ActionResult result = new ActionResult();
 		Order order = orderRepository.getOrderById(id);
@@ -181,6 +166,62 @@ public class OrderServiceImpl implements OrderService{
 
 		result.setData(outDto);
 
+		return result;
+	}
+
+	@Override
+	public ActionResult updateStatusCompleteOrder(Integer id) {
+		ActionResult result = new ActionResult();
+		Order order = orderRepository.getOrderById(id);
+		
+		if (order == null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+			return result;
+		}
+		
+		if (order.getStatus().equalsIgnoreCase(OrderStatusEnum.CANCEL.getStatus())) {
+			result.setErrorCodeEnum(ErrorCodeEnum.CANT_COMPLETE_CANCELED_ODER);
+			return result;
+		}
+		
+		order.setStatus(OrderStatusEnum.COMPLETE.getStatus());
+		
+		List<OrderDetail> details = order.getOrderDetails();
+		for (OrderDetail orderDetail : details) {
+			Product product = orderDetail.getProduct();
+			product.setSold(product.getSold()+orderDetail.getAmount());
+			productReponsitory.save(product);
+		}
+		
+		result.setData(OrderModel.transform(order));
+		return result;
+	}
+
+	@Override
+	public ActionResult updateStatusCancelOrder(Integer id) {
+		ActionResult result = new ActionResult();
+		Order order = orderRepository.getOrderById(id);
+		
+		if (order == null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+			return result;
+		}
+		
+		if (order.getStatus().equalsIgnoreCase(OrderStatusEnum.COMPLETE.getStatus())) {
+			result.setErrorCodeEnum(ErrorCodeEnum.CANT_CANCEL_COMPLETED_ODER);
+			return result;
+		}
+		
+		order.setStatus(OrderStatusEnum.CANCEL.getStatus());
+		
+		List<OrderDetail> details = order.getOrderDetails();
+		for (OrderDetail orderDetail : details) {
+			Product product = orderDetail.getProduct();
+			product.setStock(product.getStock()+orderDetail.getAmount());
+			productReponsitory.save(product);
+		}
+		
+		result.setData(OrderModel.transform(order));
 		return result;
 	}
 

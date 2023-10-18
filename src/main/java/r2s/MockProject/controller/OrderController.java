@@ -5,7 +5,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import r2s.MockProject.enums.ErrorCodeEnum;
-import r2s.MockProject.enums.OrderStatusEnum;
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.ResponseBuild;
 import r2s.MockProject.model.ResponseModel;
@@ -20,39 +19,29 @@ public class OrderController {
 	@Autowired
 	private ResponseBuild responseBuild;
 
-    @GetMapping("/")
-    public ResponseModel  getAll(@RequestParam Integer page,@RequestParam Integer size){
-        ActionResult result = null;
-        try {
-            result = orderService.getAllOrders(page, size);
-        }catch (Exception e){
-            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
-        }
-        return responseBuild.build(result);
-    }
-	@PostMapping("/")
-    public ResponseModel create(@RequestBody OrderInDto orderIn){
-        ActionResult result = null;
-        try {
-            result = orderService.createOrder(orderIn);
-        }catch(Exception e){
-            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
-        }
-        return responseBuild.build(result);
-    }
+	@GetMapping("/")
+	public ResponseModel getAll(@RequestParam Integer page, @RequestParam Integer size) {
+		ActionResult result = null;
+		try {
+			result = orderService.getAllOrders(page, size);
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result);
+	}
 
-    @PutMapping("/status/{id}_{statusEnum}")
-    public ResponseModel updateStatus(@PathVariable Integer id,@PathVariable OrderStatusEnum statusEnum){
-        ActionResult result = null;
-        try {
-            result = orderService.updateStatus(id, statusEnum);
-        }catch(Exception e){
-            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
-        }
-        return responseBuild.build(result);
-    }
-    
-    @GetMapping("/{orderId}")
+	@PostMapping("/")
+	public ResponseModel create(@RequestBody OrderInDto orderIn) {
+		ActionResult result = null;
+		try {
+			result = orderService.createOrder(orderIn);
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result);
+	}
+
+	@GetMapping("/{orderId}")
 	public ResponseModel getOrderById(@PathVariable Integer orderId) {
 		ActionResult result = null;
 		try {
@@ -60,17 +49,40 @@ public class OrderController {
 		} catch (Exception e) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
 		}
-		return responseBuild.build(result); 
+		return responseBuild.build(result);
 	}
-    
-    @GetMapping("/accountId/{accountId}")
-	public ResponseModel getOrderByAccountIdPaging(@PathVariable Integer accountId, @Param(value = "page") Integer page, @Param(value = "size") Integer size) {
+
+	@GetMapping("/accountId/{accountId}")
+	public ResponseModel getOrderByAccountIdPaging(@PathVariable Integer accountId, @Param(value = "page") Integer page,
+			@Param(value = "size") Integer size) {
 		ActionResult result = null;
 		try {
-			result = orderService.findOrderByAccountId(accountId,page,size);
+			result = orderService.findOrderByAccountId(accountId, page, size);
 		} catch (Exception e) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
 		}
-		return responseBuild.build(result); 
+		return responseBuild.build(result);
+	}
+	
+	@PutMapping("/complete/{orderId}")
+	public ResponseModel updateStatusCompleteOrder(@PathVariable Integer orderId) {
+		ActionResult result = null;
+		try {
+			result = orderService.updateStatusCompleteOrder(orderId);
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result);
+	}
+	
+	@PutMapping("/cancel/{orderId}")
+	public ResponseModel updateStatusCancelOrder(@PathVariable Integer orderId) {
+		ActionResult result = null;
+		try {
+			result = orderService.updateStatusCancelOrder(orderId);
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result);
 	}
 }
