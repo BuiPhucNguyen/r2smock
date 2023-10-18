@@ -110,6 +110,11 @@ public class ProductServiceImpl implements ProductService {
         if (brand == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.NO_HAVE_ID_BRAND);
             return result;
+        }else {
+            if (brand.getStatus() == false){
+                result.setErrorCodeEnum(ErrorCodeEnum.NO_HAVE_ID_BRAND);
+                return result;
+            }
         }
         product.setBrand(brand);
         product.setName(productIn.getName());
@@ -140,6 +145,7 @@ public class ProductServiceImpl implements ProductService {
         updateP.setDescription(productIn.getDescription());
         updateP.setPrice(productIn.getPrice());
 //        productReponsitory.save(updateP);
+
         Product product = productReponsitory.save(updateP);
 
         result.setData(ProductModel.transform(product));
