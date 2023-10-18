@@ -13,5 +13,5 @@ public interface BrandService {
 
     ActionResult update(BrandInDto brand, Integer id);
 
-    ActionResult delete(Integer id);
+    ActionResult updateStatus(Integer id, boolean status);
 }

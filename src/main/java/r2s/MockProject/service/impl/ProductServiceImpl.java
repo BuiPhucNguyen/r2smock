@@ -11,11 +11,13 @@ import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.dto.ProductInDto;
 import r2s.MockProject.model.dto.ProductOutDto;
+import r2s.MockProject.model.entity.BrandModel;
 import r2s.MockProject.model.entity.ProductModel;
 import r2s.MockProject.repository.BrandReponsitory;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +67,37 @@ public class ProductServiceImpl implements ProductService {
         }
 
         result.setData(ProductModel.transform(product));
+        return result;
+    }
+
+    @Override
+    public ActionResult getByBrandId(Integer id) {
+        ActionResult result = new ActionResult();
+        Brand brand = brandReponsitory.getBrandById(id);
+        if (brand == null){
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
+        }
+        List<Product> products = productReponsitory.findAll();
+        if (products.isEmpty()){
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
+        List<Product> productsByBrand = new ArrayList<>();
+        for(Product product : products){
+            if (product.getBrand().getId().equals(brand.getId())){
+                productsByBrand.add(product);
+            }
+        }
+
+        if (productsByBrand.isEmpty()){
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
+        ProductOutDto dto = new ProductOutDto();
+        dto.setProductModels(productsByBrand.stream().map(ProductModel::transform).collect(Collectors.toList()));
+        dto.setTotal(productsByBrand.size());
+        result.setData(dto);
         return result;
     }
 

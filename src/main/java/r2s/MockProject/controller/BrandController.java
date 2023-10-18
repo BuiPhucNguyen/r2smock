@@ -63,11 +63,11 @@ public class BrandController {
         return responseBuild.build(result);
     }
 
-    @DeleteMapping("/")
-    public ResponseModel delete(@PathVariable Integer id){
+    @PutMapping("/status/{id}_{status}")
+    public ResponseModel updateStatus(@PathVariable Integer id, @PathVariable boolean status){
         ActionResult result = null;
         try {
-            result = brandService.delete(id);
+            result = brandService.updateStatus(id, status);
         }catch(Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }

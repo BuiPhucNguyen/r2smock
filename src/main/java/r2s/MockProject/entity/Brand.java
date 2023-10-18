@@ -21,7 +21,9 @@ public class Brand {
 	private Integer id;
 	@Column(name = "name", columnDefinition = "varchar(255)")
 	private String name;
-	
+	@Column(name = "status", columnDefinition = "boolean")
+	private Boolean status;
+
 	@OneToMany(mappedBy = "brand")
 	private List<Product> products;
 }

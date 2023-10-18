@@ -58,6 +58,7 @@ public class BrandServiceImpl implements BrandService {
         return result;
     }
 
+
     @Override
     public ActionResult create(BrandInDto brandIn) {
         ActionResult result = new ActionResult();
@@ -101,18 +102,17 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public ActionResult delete(Integer id) {
+    public ActionResult updateStatus(Integer id, boolean status) {
         ActionResult result = new ActionResult();
         
         Brand brand = brandReponsitory.getBrandById(id);
-        Brand brandDelete = brand;
-        
         if (brand == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
-        brandReponsitory.delete(brand);
-        result.setData(brandDelete);
+
+        brand.setStatus(status);
+        result.setData(BrandModel.transform(brand));
         return result;
     }
 }

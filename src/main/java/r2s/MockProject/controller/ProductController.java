@@ -41,6 +41,16 @@ public class ProductController {
         }
         return responseBuild.build(result);
     }
+    @GetMapping("/brand/{id}")
+    public ResponseModel getByBrandId(@PathVariable Integer id){
+        ActionResult result = null;
+        try {
+            result = productService.getByBrandId(id);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
 
     @PostMapping("/")
     public ResponseModel create(@RequestBody ProductInDto productIn){

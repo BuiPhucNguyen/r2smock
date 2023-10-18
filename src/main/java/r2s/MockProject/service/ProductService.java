@@ -7,6 +7,7 @@ public interface ProductService {
     ActionResult getAll(Integer page, Integer size); // Integer page, Integer size
 
     ActionResult getById(Integer id);
+    ActionResult getByBrandId(Integer id);
 
     ActionResult create(ProductInDto productIn);
 
