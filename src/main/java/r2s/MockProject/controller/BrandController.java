@@ -29,6 +29,17 @@ public class BrandController {
         }
         return responseBuild.build(result);
     }
+    
+    @GetMapping("/status/{status}")
+    public ResponseModel getAllStatusTrue(@PathVariable Boolean status){
+        ActionResult result = null;
+        try {
+            result = brandService.getAllBrandByStatus(status);
+        }catch(Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
 
     @GetMapping("/{id}")
     public ResponseModel getById(@PathVariable Integer id){

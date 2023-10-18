@@ -11,7 +11,6 @@ import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.dto.ProductInDto;
 import r2s.MockProject.model.dto.ProductOutDto;
-import r2s.MockProject.model.entity.BrandModel;
 import r2s.MockProject.model.entity.ProductModel;
 import r2s.MockProject.repository.BrandReponsitory;
 import r2s.MockProject.repository.ProductReponsitory;

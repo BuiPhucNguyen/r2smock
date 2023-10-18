@@ -115,4 +115,27 @@ public class BrandServiceImpl implements BrandService {
         result.setData(BrandModel.transform(brand));
         return result;
     }
+
+	@Override
+	public ActionResult getAllBrandByStatus(Boolean status) {
+		 ActionResult result = new ActionResult();
+	        List<Brand> brands = brandReponsitory.findAll();
+	        if (brands.isEmpty()){
+	            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+	            return result;
+	        }
+
+	        List<BrandModel> brandModels = brands.stream()
+	        		.map(BrandModel::transform)
+	        		.filter(b -> b.isStatus() == status)
+	        		.collect(Collectors.toList());
+	        
+	        BrandOutDto brandOutDto = new BrandOutDto();
+	        brandOutDto.setBrands(brandModels);
+	        brandOutDto.setTotal(brands.size());
+	        
+	        result.setData(brandOutDto);
+
+	        return result;
+	}
 }

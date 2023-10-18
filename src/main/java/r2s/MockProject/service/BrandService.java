@@ -6,6 +6,8 @@ import r2s.MockProject.model.dto.BrandInDto;
 
 public interface BrandService {
     ActionResult getAll();
+    
+    ActionResult getAllBrandByStatus(Boolean status);
 
     ActionResult getById(Integer id);
 
