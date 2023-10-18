@@ -1,6 +1,7 @@
 package r2s.MockProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import r2s.MockProject.enums.ErrorCodeEnum;
@@ -50,4 +51,26 @@ public class OrderController {
         }
         return responseBuild.build(result);
     }
+    
+    @GetMapping("/{orderId}")
+	public ResponseModel getOrderById(@PathVariable Integer orderId) {
+		ActionResult result = null;
+		try {
+			result = orderService.findOrderById(orderId);
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result); 
+	}
+    
+    @GetMapping("/accountId/{accountId}")
+	public ResponseModel getOrderByAccountIdPaging(@PathVariable Integer accountId, @Param(value = "page") Integer page, @Param(value = "size") Integer size) {
+		ActionResult result = null;
+		try {
+			result = orderService.findOrderByAccountId(accountId,page,size);
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result); 
+	}
 }

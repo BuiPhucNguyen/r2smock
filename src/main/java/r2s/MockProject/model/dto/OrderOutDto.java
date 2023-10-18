@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class OrderOutDto {
-    private List<OrderModel> orderModels;
+    private List<OrderModel> orders;
     private Integer total;
 }

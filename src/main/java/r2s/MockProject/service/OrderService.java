@@ -8,6 +8,10 @@ public interface OrderService {
 	ActionResult getAllOrders(Integer page, Integer size); 
 
     ActionResult createOrder(OrderInDto orderIn);
+    
+    ActionResult findOrderById(Integer id);
+    
+    ActionResult findOrderByAccountId(Integer id, Integer page, Integer size);
 
     ActionResult updateStatus(Integer id, OrderStatusEnum status);
 }

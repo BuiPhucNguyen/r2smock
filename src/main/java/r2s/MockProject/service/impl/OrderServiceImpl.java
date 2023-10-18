@@ -131,4 +131,40 @@ public class OrderServiceImpl implements OrderService{
 		return result;
 	}
 
+	@Override
+	public ActionResult findOrderById(Integer id) {
+		ActionResult result = new ActionResult();
+		Order order = orderRepository.getOrderById(id);
+		if (order == null) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+			return result;
+		}
+		
+		result.setData(OrderModel.transform(order));
+		return result;
+	}
+
+	@Override
+	public ActionResult findOrderByAccountId(Integer id, Integer page, Integer size) {
+		ActionResult result = new ActionResult();
+
+		Page<Order> pageResult = orderRepository.getOrderByAccountId(id,PageRequest.of(page - 1, size));
+
+		if (pageResult.getNumberOfElements() == 0) {
+			result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+			return result;
+		}
+
+		List<OrderModel> orderModels = pageResult.get()
+				.map(OrderModel::transform).collect(Collectors.toList());
+
+		OrderOutDto outDto = new OrderOutDto();
+		outDto.setOrderModels(orderModels);
+		outDto.setTotal(pageResult.getNumberOfElements());
+
+		result.setData(outDto);
+
+		return result;
+	}
+
 }
