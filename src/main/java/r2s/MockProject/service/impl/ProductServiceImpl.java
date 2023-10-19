@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
             return result;
         }
         ProductOutDto OutDto = new ProductOutDto();
-        OutDto.setProductModels(productModels);
+        OutDto.setProducts(productModels);
         OutDto.setTotal(productModels.size());
 
         result.setData(OutDto);
@@ -70,12 +70,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ActionResult getByBrandId(Integer id) {
+    public ActionResult getActiveProductByBrandId(Integer id) {
         ActionResult result = new ActionResult();
         Brand brand = brandReponsitory.getBrandById(id);
         if (brand == null){
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
+        } else {
+        	if (!brand.getStatus()) {
+        		result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+                return result;
+			}
         }
         List<Product> products = productReponsitory.findAll();
         if (products.isEmpty()){
@@ -84,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
         }
         List<Product> productsByBrand = new ArrayList<>();
         for(Product product : products){
-            if (product.getBrand().getId().equals(brand.getId())){
+            if (product.getBrand().getId().equals(brand.getId()) && product.getStatus()){
                 productsByBrand.add(product);
             }
         }
@@ -93,9 +98,11 @@ public class ProductServiceImpl implements ProductService {
             result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
             return result;
         }
+        
         ProductOutDto dto = new ProductOutDto();
-        dto.setProductModels(productsByBrand.stream().map(ProductModel::transform).collect(Collectors.toList()));
+        dto.setProducts(productsByBrand.stream().map(ProductModel::transform).collect(Collectors.toList()));
         dto.setTotal(productsByBrand.size());
+        
         result.setData(dto);
         return result;
     }

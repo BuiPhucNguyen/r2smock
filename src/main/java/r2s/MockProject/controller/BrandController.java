@@ -1,6 +1,7 @@
 package r2s.MockProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import r2s.MockProject.enums.ErrorCodeEnum;
 import r2s.MockProject.model.ActionResult;
@@ -30,11 +31,11 @@ public class BrandController {
         return responseBuild.build(result);
     }
     
-    @GetMapping("/status/{status}")
-    public ResponseModel getAllStatusTrue(@PathVariable Boolean status){
+    @GetMapping("/active")
+    public ResponseModel getActiveBrands(@Param(value = "page") Integer page, @Param(value = "size") Integer size){
         ActionResult result = null;
         try {
-            result = brandService.getAllBrandByStatus(status);
+            result = brandService.getActiveBrands(page,size);
         }catch(Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }

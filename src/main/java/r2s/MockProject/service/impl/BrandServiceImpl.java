@@ -2,6 +2,8 @@ package r2s.MockProject.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import r2s.MockProject.entity.Brand;
 import r2s.MockProject.enums.ErrorCodeEnum;
@@ -102,7 +104,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public ActionResult updateStatus(Integer id, boolean status) {
+    public ActionResult updateStatus(Integer id, Boolean status) {
         ActionResult result = new ActionResult();
         
         Brand brand = brandReponsitory.getBrandById(id);
@@ -117,22 +119,22 @@ public class BrandServiceImpl implements BrandService {
     }
 
 	@Override
-	public ActionResult getAllBrandByStatus(Boolean status) {
+	public ActionResult getActiveBrands(Integer page, Integer size) {
 		 ActionResult result = new ActionResult();
-	        List<Brand> brands = brandReponsitory.findAll();
-	        if (brands.isEmpty()){
+	        Page<Brand> pageResult = brandReponsitory.getActiveBrands(PageRequest.of(page-1, size));
+	        
+	        if (pageResult.getNumberOfElements()==0){
 	            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
 	            return result;
 	        }
 
-	        List<BrandModel> brandModels = brands.stream()
+	        List<BrandModel> brandModels = pageResult.get()
 	        		.map(BrandModel::transform)
-	        		.filter(b -> b.isStatus() == status)
 	        		.collect(Collectors.toList());
 	        
 	        BrandOutDto brandOutDto = new BrandOutDto();
 	        brandOutDto.setBrands(brandModels);
-	        brandOutDto.setTotal(brands.size());
+	        brandOutDto.setTotal(pageResult.getNumberOfElements());
 	        
 	        result.setData(brandOutDto);
 

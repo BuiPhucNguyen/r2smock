@@ -7,7 +7,7 @@ import r2s.MockProject.model.dto.BrandInDto;
 public interface BrandService {
     ActionResult getAll();
     
-    ActionResult getAllBrandByStatus(Boolean status);
+    ActionResult getActiveBrands(Integer page, Integer size);
 
     ActionResult getById(Integer id);
 
@@ -15,5 +15,5 @@ public interface BrandService {
 
     ActionResult update(BrandInDto brand, Integer id);
 
-    ActionResult updateStatus(Integer id, boolean status);
+    ActionResult updateStatus(Integer id, Boolean status);
 }

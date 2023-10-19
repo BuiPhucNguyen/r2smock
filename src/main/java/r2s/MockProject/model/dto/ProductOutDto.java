@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class ProductOutDto {
-    private List<ProductModel> productModels;
+    private List<ProductModel> products;
     private Integer total;
 }
