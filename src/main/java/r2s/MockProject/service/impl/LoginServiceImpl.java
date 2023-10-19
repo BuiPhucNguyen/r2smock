@@ -7,6 +7,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import r2s.MockProject.model.entity.AccountModel;
 import r2s.MockProject.repository.AccountRepository;
 import r2s.MockProject.repository.RoleRepository;
 import r2s.MockProject.service.LoginService;
+import r2s.MockProject.utils.GetCurrentUsername;
 import r2s.MockProject.utils.JwtUtils;
 
 @Service
@@ -50,8 +53,11 @@ public class LoginServiceImpl implements LoginService {
 			return result;
 		} else {
 			try {
-				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(),
-						login.getPassword(), userDetails.getAuthorities()));
+				Authentication authentication = authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword(),
+								userDetails.getAuthorities()));
+
+				SecurityContextHolder.getContext().setAuthentication(authentication);
 
 				String token = JwtUtils.generateToken(userDetails.getUsername());
 
@@ -67,40 +73,40 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public ActionResult signup(SignUpDto signup) {
 		ActionResult result = new ActionResult();
-		
-		if (accountRepository.findByUsername(signup.getUsername())!=null) {
+
+		if (accountRepository.findByUsername(signup.getUsername()) != null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.EXISTED_USERNAME_ACCOUNT);
 			return result;
 		}
-		
-		if (accountRepository.findByEmail(signup.getEmail())!=null) {
+
+		if (accountRepository.findByEmail(signup.getEmail()) != null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.EXISTED_EMAIL_ACCOUNT);
 			return result;
 		}
-		
+
 		Account account = new Account();
-		
+
 		account.setFirstName(signup.getFirstName());
 		account.setLastName(signup.getLastName());
 		account.setEmail(signup.getEmail());
 		account.setUserName(signup.getUsername());
 		account.setPassword(passwordEncoder.encode(signup.getPassword()));
-		
+
 		account.setStatus(true);
 		account.setCreatedDate(new Date());
-		
+
 		Role role = roleRepository.getRoleByName("USER");
 		Set<Role> roles = new HashSet<>();
 		roles.add(role);
 		account.setRoles(roles);
-		
+
 		Account accountResult = accountRepository.save(account);
-		
-		if (accountResult==null) {
+
+		if (accountResult == null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_CREATE);
 			return result;
 		}
-		
+
 		result.setData(AccountModel.transform(accountResult));
 		return result;
 	}
@@ -108,18 +114,18 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public ActionResult changePassword(ChangePasswordDto changePassword) {
 		ActionResult result = new ActionResult();
-		
-		Account account = accountRepository.getAccountById(changePassword.getId());
-		if (account==null) {
+
+		Account account = accountRepository.findByUsername(GetCurrentUsername.getCurrentUsernames());
+		if (account == null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
 			return result;
 		}
-		
-		if (!passwordEncoder.matches(changePassword.getOldPassword(),account.getPassword())) {
+
+		if (!passwordEncoder.matches(changePassword.getOldPassword(), account.getPassword())) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_OLD_PASSWORD);
 			return result;
 		}
-		
+
 		account.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
 		result.setData(new String("Change password success"));
 		return result;

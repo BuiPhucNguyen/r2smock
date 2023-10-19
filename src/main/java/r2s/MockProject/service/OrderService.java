@@ -10,7 +10,7 @@ public interface OrderService {
     
     ActionResult findOrderById(Integer id);
     
-    ActionResult findOrderByAccountId(Integer id, Integer page, Integer size);
+    ActionResult findOrderByAccountCurrent(Integer page, Integer size); //user
     
     ActionResult updateStatusCompleteOrder(Integer id);
     

@@ -52,12 +52,12 @@ public class OrderController {
 		return responseBuild.build(result);
 	}
 
-	@GetMapping("/accountId/{accountId}")
-	public ResponseModel getOrderByAccountIdPaging(@PathVariable Integer accountId, @Param(value = "page") Integer page,
+	@GetMapping("/current_account")
+	public ResponseModel getOrderByAccountIdPaging(@Param(value = "page") Integer page,
 			@Param(value = "size") Integer size) {
 		ActionResult result = null;
 		try {
-			result = orderService.findOrderByAccountId(accountId, page, size);
+			result = orderService.findOrderByAccountCurrent(page, size);
 		} catch (Exception e) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
 		}

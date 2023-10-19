@@ -8,7 +8,6 @@ import lombok.Data;
 
 @Data
 public class OrderInDto {
-	private Integer accountId;
 	private String address;
 	private String phone;
 	private List<OrderDetailInDto> orderDetails;

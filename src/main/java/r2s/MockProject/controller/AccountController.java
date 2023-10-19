@@ -48,11 +48,22 @@ public class AccountController {
 		return responseBuild.build(result); 
 	}
 	
-	@PutMapping("/{accountId}")
-	public ResponseModel updateAccount(@PathVariable Integer accountId, @RequestBody AccountInDto account) {
+	@GetMapping("/current")
+	public ResponseModel getCurrentAccount() {
 		ActionResult result = null;
 		try {
-			result = accountService.updatetAccount(accountId,account);
+			result = accountService.getCurrentAccount();
+		} catch (Exception e) {
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result); 
+	}
+	
+	@PutMapping("/")
+	public ResponseModel updateAccount(@RequestBody AccountInDto account) {
+		ActionResult result = null;
+		try {
+			result = accountService.updatetAccount(account);
 		} catch (Exception e) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
 		}
