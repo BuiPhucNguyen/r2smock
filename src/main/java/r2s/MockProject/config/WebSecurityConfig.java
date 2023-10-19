@@ -2,7 +2,6 @@ package r2s.MockProject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,7 +42,11 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthFilter jwtAuthFilter)
 			throws Exception {
 		return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-				.authorizeHttpRequests(authorization -> authorization.anyRequest().permitAll())
+				.authorizeHttpRequests(authorization -> authorization
+						.requestMatchers("/auths/login").permitAll()
+						.requestMatchers("/auths/signup").permitAll()
+						.requestMatchers("/accounts/admin/**").hasRole("ADMIN")
+						.anyRequest().authenticated())
 				.exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint()))
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
