@@ -2,6 +2,8 @@ package r2s.MockProject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+//import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,10 +45,15 @@ public class WebSecurityConfig {
 			throws Exception {
 		return httpSecurity.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(authorization -> authorization
-						.requestMatchers("/auths/login").permitAll()
-						.requestMatchers("/auths/signup").permitAll()
-						.requestMatchers("/accounts/admin/**").hasRole("ADMIN")
-						.anyRequest().authenticated())
+						//brands
+						.requestMatchers(HttpMethod.GET,"/brands/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/brands/").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/brands/**").hasAuthority("ROLE_ADMIN")
+						//product
+						.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/products/").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("ROLE_ADMIN")
+						.anyRequest().permitAll())
 				.exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint()))
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}

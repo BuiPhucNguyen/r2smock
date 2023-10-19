@@ -20,7 +20,7 @@ public class BrandController {
     @Autowired
     private ResponseBuild responseBuild;
 
-    @GetMapping("/")
+    @GetMapping("/") //user admin
     public ResponseModel getAll(){
         ActionResult result = null;
         try {
@@ -31,7 +31,7 @@ public class BrandController {
         return responseBuild.build(result);
     }
     
-    @GetMapping("/active")
+    @GetMapping("/active") // user admin
     public ResponseModel getActiveBrands(@Param(value = "page") Integer page, @Param(value = "size") Integer size){
         ActionResult result = null;
         try {
@@ -42,7 +42,7 @@ public class BrandController {
         return responseBuild.build(result);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // user admin
     public ResponseModel getById(@PathVariable Integer id){
         ActionResult result = null;
         try {
@@ -53,7 +53,7 @@ public class BrandController {
         return responseBuild.build(result);
     }
 
-    @PostMapping("/")
+    @PostMapping("/") // admin
     public ResponseModel create(@RequestBody BrandInDto brand){
         ActionResult result = null;
         try {
@@ -64,7 +64,7 @@ public class BrandController {
         return responseBuild.build(result);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // admin
     public ResponseModel update(@RequestBody BrandInDto brand, @PathVariable Integer id){
         ActionResult result = null;
         try {
@@ -75,7 +75,7 @@ public class BrandController {
         return responseBuild.build(result);
     }
 
-    @PutMapping("/status/{id}_{status}")
+    @PutMapping("/{id}/status/{status}") // admin
     public ResponseModel updateStatus(@PathVariable Integer id, @PathVariable boolean status){
         ActionResult result = null;
         try {

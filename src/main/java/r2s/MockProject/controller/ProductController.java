@@ -19,7 +19,7 @@ public class ProductController {
     @Autowired
     private ResponseBuild responseBuild;
 
-    @GetMapping("/")
+    @GetMapping("/") // user, admin
     public ResponseModel  getAll(@RequestParam Integer page,@RequestParam Integer size){
         // @RequestParam Integer page,@RequestParam Integer size
         ActionResult result = null;
@@ -31,7 +31,7 @@ public class ProductController {
         return responseBuild.build(result);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // user admin
     public ResponseModel getByid(@PathVariable Integer id){
         ActionResult result = null;
         try {
@@ -41,7 +41,7 @@ public class ProductController {
         }
         return responseBuild.build(result);
     }
-    @GetMapping("/brand/{id}")
+    @GetMapping("/brand/{id}") // user admin
     public ResponseModel getActiveProductByBrandId(@PathVariable Integer id){
         ActionResult result = null;
         try {
@@ -52,7 +52,7 @@ public class ProductController {
         return responseBuild.build(result);
     }
 
-    @PostMapping("/")
+    @PostMapping("/") // admin
     public ResponseModel create(@RequestBody ProductInDto productIn){
         ActionResult result = null;
         try {
@@ -64,7 +64,7 @@ public class ProductController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // admin
     public ResponseModel update(@RequestBody ProductInDto productIn, @PathVariable Integer id){
         ActionResult result = null;
         try {
@@ -75,7 +75,7 @@ public class ProductController {
         return responseBuild.build(result);
     }
 
-    @PutMapping("/stock/{id}_{add}")
+    @PutMapping("/{id}/stock/{add}") // admin
     public ResponseModel updateStock(@PathVariable Integer id,@PathVariable Integer add){
         ActionResult result = null;
         try {
@@ -86,7 +86,7 @@ public class ProductController {
         return responseBuild.build(result);
     }
 
-    @PutMapping("/status/{id}_{status}")
+    @PutMapping("/{id}/status/{status}") // admin
     public ResponseModel updateStock(@PathVariable Integer id,@PathVariable boolean status){
         ActionResult result = null;
         try {
