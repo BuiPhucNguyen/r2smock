@@ -26,7 +26,7 @@ public class AccountController {
 	@Autowired
 	private ResponseBuild responseBuild;
 	
-	@GetMapping("/admin/")
+	@GetMapping("/all")
 	public ResponseModel getAccountPaging(@Param(value = "page") Integer page, @Param(value = "size") Integer size) {
 		ActionResult result = null;
 		try {
@@ -37,7 +37,7 @@ public class AccountController {
 		return responseBuild.build(result); 
 	}
 	
-	@GetMapping("/admin/{accountId}")
+	@GetMapping("/{accountId}")
 	public ResponseModel getAccountById(@PathVariable Integer accountId) {
 		ActionResult result = null;
 		try {

@@ -19,7 +19,7 @@ public class ProductController {
     @Autowired
     private ResponseBuild responseBuild;
 
-    @GetMapping("/") // user, admin
+    @GetMapping("/all") // admin
     public ResponseModel  getAll(@RequestParam Integer page,@RequestParam Integer size){
         // @RequestParam Integer page,@RequestParam Integer size
         ActionResult result = null;

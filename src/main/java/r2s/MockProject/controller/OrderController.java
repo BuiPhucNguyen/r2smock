@@ -19,7 +19,7 @@ public class OrderController {
 	@Autowired
 	private ResponseBuild responseBuild;
 
-	@GetMapping("/") // admin
+	@GetMapping("/all") // admin
 	public ResponseModel getAll(@RequestParam Integer page, @RequestParam Integer size) {
 		ActionResult result = null;
 		try {
@@ -41,7 +41,7 @@ public class OrderController {
 		return responseBuild.build(result);
 	}
 
-	@GetMapping("/{orderId}") // admin
+	@GetMapping("/{orderId}") // admin, user
 	public ResponseModel getOrderById(@PathVariable Integer orderId) {
 		ActionResult result = null;
 		try {
@@ -53,7 +53,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/current_account") //
-	public ResponseModel getOrderByAccountIdPaging(@Param(value = "page") Integer page,
+	public ResponseModel getOrderByCurrentAccountPaging(@Param(value = "page") Integer page,
 			@Param(value = "size") Integer size) {
 		ActionResult result = null;
 		try {

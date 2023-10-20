@@ -20,7 +20,7 @@ public class BrandController {
     @Autowired
     private ResponseBuild responseBuild;
 
-    @GetMapping("/") //user admin
+    @GetMapping("/all") //admin
     public ResponseModel getAll(){
         ActionResult result = null;
         try {

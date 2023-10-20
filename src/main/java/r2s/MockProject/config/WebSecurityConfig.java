@@ -45,15 +45,27 @@ public class WebSecurityConfig {
 			throws Exception {
 		return httpSecurity.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(authorization -> authorization
+						//account
+						.requestMatchers("/auths/login").permitAll()
+						.requestMatchers("/auths/signup").permitAll()
+						.requestMatchers(HttpMethod.GET,"/accounts/current").authenticated()
+						.requestMatchers(HttpMethod.GET,"/accounts/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/accounts/**").hasAuthority("ROLE_ADMIN")
 						//brands
-						.requestMatchers(HttpMethod.GET,"/brands/**").permitAll()
+						.requestMatchers(HttpMethod.GET,"/brands/all").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.POST, "/brands/").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/brands/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.GET,"/brands/**").permitAll()
 						//product
-						.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/products/all").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.POST, "/products/").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("ROLE_ADMIN")
-						.anyRequest().permitAll())
+						.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+						//order
+						.requestMatchers(HttpMethod.GET, "/orders/all").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/orders/**").hasAuthority("ROLE_ADMIN")
+						//other request
+						.anyRequest().authenticated())
 				.exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint()))
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}

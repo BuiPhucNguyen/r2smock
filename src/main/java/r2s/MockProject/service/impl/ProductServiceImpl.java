@@ -162,6 +162,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ActionResult updateStock(Integer id, Integer addStock) {
         ActionResult result = new ActionResult();
+        
+        if (addStock <= 0) {
+        	result.setErrorCodeEnum(ErrorCodeEnum.INVALID_NUMBER_PRODUCT_STOCK);
+            return result;
+		}
+        
         Product updateP = productReponsitory.getProductById(id);
         if (updateP == null){
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
