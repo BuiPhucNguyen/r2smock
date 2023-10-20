@@ -25,7 +25,7 @@ import r2s.MockProject.repository.AccountRepository;
 import r2s.MockProject.repository.OrderRepository;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.OrderService;
-import r2s.MockProject.utils.GetCurrentUsername;
+import r2s.MockProject.utils.CurrentUserUtils;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService{
 	public ActionResult createOrder(OrderInDto orderIn) {
 		ActionResult result = new ActionResult();
 		
-		Account account = accountRepository.findByUsername(GetCurrentUsername.getCurrentUsernames());
+		Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
 		
 		if (account==null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService{
 	public ActionResult findOrderByAccountCurrent(Integer page, Integer size) {
 		ActionResult result = new ActionResult();
 		
-		Account account = accountRepository.findByUsername(GetCurrentUsername.getCurrentUsernames());
+		Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
 
 		Page<Order> pageResult = orderRepository.getOrderByAccountId(account.getId(),PageRequest.of(page - 1, size));
 

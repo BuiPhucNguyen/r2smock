@@ -8,7 +8,7 @@ public interface ProductService {
 
     ActionResult getById(Integer id);
     
-    ActionResult getActiveProductByBrandId(Integer id);
+    ActionResult getActiveProductByActiveBrand(Integer brandId, Integer page, Integer size);
 
     ActionResult create(ProductInDto productIn);
 
@@ -17,4 +17,6 @@ public interface ProductService {
     ActionResult updateStock(Integer id, Integer stock);
     
     ActionResult updateStatus(Integer id, boolean status);
+    
+    ActionResult findByNameContainingIgnoreCase(String name, Integer page, Integer size);
 }

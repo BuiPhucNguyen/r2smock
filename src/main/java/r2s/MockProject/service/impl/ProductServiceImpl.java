@@ -16,7 +16,6 @@ import r2s.MockProject.repository.BrandReponsitory;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,10 +43,6 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductModel> productModels = productPage.stream().map(ProductModel::transform).collect(Collectors.toList());
 
-        if (productModels.isEmpty()){
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
         ProductOutDto OutDto = new ProductOutDto();
         OutDto.setProducts(productModels);
         OutDto.setTotal(productModels.size());
@@ -70,40 +65,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ActionResult getActiveProductByBrandId(Integer id) {
-        ActionResult result = new ActionResult();
-        Brand brand = brandReponsitory.getBrandById(id);
-        if (brand == null){
-            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
-            return result;
-        } else {
-        	if (!brand.getStatus()) {
-        		result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
-                return result;
-			}
-        }
-        List<Product> products = productReponsitory.findAll();
-        if (products.isEmpty()){
+    public ActionResult getActiveProductByActiveBrand(Integer brandId, Integer page, Integer size) {
+    	ActionResult result = new ActionResult();
+
+        Page<Product> productPage = productReponsitory.getActiveProductByActiveBrand(brandId, PageRequest.of(page - 1, size));
+
+        if (productPage.isEmpty()){
             result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
             return result;
-        }
-        List<Product> productsByBrand = new ArrayList<>();
-        for(Product product : products){
-            if (product.getBrand().getId().equals(brand.getId()) && product.getStatus()){
-                productsByBrand.add(product);
-            }
         }
 
-        if (productsByBrand.isEmpty()){
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
-        
-        ProductOutDto dto = new ProductOutDto();
-        dto.setProducts(productsByBrand.stream().map(ProductModel::transform).collect(Collectors.toList()));
-        dto.setTotal(productsByBrand.size());
-        
-        result.setData(dto);
+        List<ProductModel> productModels = productPage.stream().map(ProductModel::transform).collect(Collectors.toList());
+
+        ProductOutDto OutDto = new ProductOutDto();
+        OutDto.setProducts(productModels);
+        OutDto.setTotal(productModels.size());
+
+        result.setData(OutDto);
         return result;
     }
 
@@ -192,4 +170,25 @@ public class ProductServiceImpl implements ProductService {
         result.setData(ProductModel.transform(updateP));
         return result;
     }
+
+	@Override
+	public ActionResult findByNameContainingIgnoreCase(String name, Integer page, Integer size) {
+		ActionResult result = new ActionResult();
+
+        Page<Product> productPage = productReponsitory.findByNameContainingIgnoreCase(name, PageRequest.of(page - 1, size));
+
+        if (productPage.isEmpty()){
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
+
+        List<ProductModel> productModels = productPage.stream().map(ProductModel::transform).collect(Collectors.toList());
+
+        ProductOutDto OutDto = new ProductOutDto();
+        OutDto.setProducts(productModels);
+        OutDto.setTotal(productModels.size());
+
+        result.setData(OutDto);
+        return result;
+	}
 }

@@ -17,7 +17,7 @@ import r2s.MockProject.model.dto.AccountOutDto;
 import r2s.MockProject.model.entity.AccountModel;
 import r2s.MockProject.repository.AccountRepository;
 import r2s.MockProject.service.AccountService;
-import r2s.MockProject.utils.GetCurrentUsername;
+import r2s.MockProject.utils.CurrentUserUtils;
 
 @Service
 @Transactional
@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
 	public ActionResult updatetAccount(AccountInDto newAccount) {
 		ActionResult result = new ActionResult();
 
-		Account accountTemp = accountRepository.findByUsername(GetCurrentUsername.getCurrentUsernames());
+		Account accountTemp = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
 
 		if (accountTemp == null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_UPDATE);
@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public ActionResult getCurrentAccount() {
 		ActionResult result = new ActionResult();
-		Account account = accountRepository.findByUsername(GetCurrentUsername.getCurrentUsernames());
+		Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
 		if (account == null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
 			return result;

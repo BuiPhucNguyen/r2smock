@@ -23,7 +23,7 @@ import r2s.MockProject.model.entity.AccountModel;
 import r2s.MockProject.repository.AccountRepository;
 import r2s.MockProject.repository.RoleRepository;
 import r2s.MockProject.service.LoginService;
-import r2s.MockProject.utils.GetCurrentUsername;
+import r2s.MockProject.utils.CurrentUserUtils;
 import r2s.MockProject.utils.JwtUtils;
 
 @Service
@@ -112,7 +112,7 @@ public class LoginServiceImpl implements LoginService {
 	public ActionResult changePassword(ChangePasswordDto changePassword) {
 		ActionResult result = new ActionResult();
 
-		Account account = accountRepository.findByUsername(GetCurrentUsername.getCurrentUsernames());
+		Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
 		if (account == null) {
 			result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
 			return result;

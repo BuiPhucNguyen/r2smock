@@ -42,10 +42,21 @@ public class ProductController {
         return responseBuild.build(result);
     }
     @GetMapping("/brand/{id}") // user admin
-    public ResponseModel getActiveProductByBrandId(@PathVariable Integer id){
+    public ResponseModel getActiveProductByActiveBrand(@PathVariable Integer id, @RequestParam Integer page,@RequestParam Integer size){
         ActionResult result = null;
         try {
-            result = productService.getActiveProductByBrandId(id);
+            result = productService.getActiveProductByActiveBrand(id, page, size);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
+    
+    @GetMapping("/name/{name}") // user admin
+    public ResponseModel findByNameContainingIgnoreCase(@PathVariable String name, @RequestParam Integer page,@RequestParam Integer size){
+        ActionResult result = null;
+        try {
+            result = productService.findByNameContainingIgnoreCase(name, page, size);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }
