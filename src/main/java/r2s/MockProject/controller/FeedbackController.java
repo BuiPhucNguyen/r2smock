@@ -42,7 +42,7 @@ public class FeedbackController {
 //    }
 
     @PostMapping("/")
-    public ResponseModel  create(@RequestBody FeedbackInDto feedbackInDto){
+    public ResponseModel create(@RequestBody FeedbackInDto feedbackInDto){
         ActionResult result = null;
         try {
             result = feedbackService.create(feedbackInDto);

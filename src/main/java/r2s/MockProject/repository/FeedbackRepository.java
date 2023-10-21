@@ -1,12 +1,13 @@
 package r2s.MockProject.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import r2s.MockProject.entity.Brand;
 import r2s.MockProject.entity.FeedbackProduct;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.data.jpa.repository.Query;
-//import org.springframework.data.repository.query.Param;
-//import r2s.MockProject.entity.Product;
+import r2s.MockProject.entity.Product;
 
 public interface FeedbackRepository extends JpaRepository<FeedbackProduct, Integer> {
 

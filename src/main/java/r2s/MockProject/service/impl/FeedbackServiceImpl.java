@@ -31,7 +31,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public ActionResult getAll(Integer page, Integer size) {
+
         ActionResult result = new ActionResult();
+
         Page<FeedbackProduct> feedbacksPage = feedbackRepository.findAll(PageRequest.of(page - 1, size));
         if (feedbacksPage.isEmpty()){
             result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
@@ -82,7 +84,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public ActionResult create(FeedbackInDto feedbackInDto) {
         ActionResult result = new ActionResult();
         FeedbackProduct feedback = new FeedbackProduct();
-        Product product = productReponsitory.getReferenceById(feedbackInDto.getProductid());
+        Product product = productReponsitory.getProductById(feedbackInDto.getProductId());
         if (product == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;

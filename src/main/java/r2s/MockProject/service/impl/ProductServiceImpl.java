@@ -31,7 +31,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ActionResult getAll(Integer page, Integer size) {
-        // Integer page, Integer size
         ActionResult result = new ActionResult();
 
         Page<Product> productPage = productReponsitory.findAll(PageRequest.of(page - 1, size));
