@@ -21,7 +21,6 @@ public class ProductController {
 
     @GetMapping("/all") // admin
     public ResponseModel  getAll(@RequestParam Integer page,@RequestParam Integer size){
-        // @RequestParam Integer page,@RequestParam Integer size
         ActionResult result = null;
         try {
             result = productService.getAll(page, size);
