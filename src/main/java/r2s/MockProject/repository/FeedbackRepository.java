@@ -15,7 +15,7 @@ public interface FeedbackRepository extends JpaRepository<FeedbackProduct, Integ
 //
 //    Page<Product> findByStar(Integer star, Pageable pageable);
 
-	@Query("SELECT f FROM FeedbackProduct f WHERE f.account.id = :productId")
+	@Query("SELECT f FROM FeedbackProduct f WHERE f.product.id = :productId order by f.star desc")
 	Page<FeedbackProduct> getFeedbacksByProductId(@Param("productId") Integer productId, Pageable pageable);
 
 	@Query("SELECT f FROM FeedbackProduct f WHERE f.star = :feedbackStar and f.account.id = :productId")

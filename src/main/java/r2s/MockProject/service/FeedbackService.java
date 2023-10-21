@@ -7,7 +7,9 @@ public interface FeedbackService {
 
     ActionResult getAll(Integer page, Integer size);
 
-//    ActionResult getByStar(Integer star, Integer page, Integer size);
+    ActionResult getAllByStarAndProduct(Integer id, Integer star,Integer page, Integer size);
+
+    ActionResult getAllFeedbackByProduct(Integer id, Integer page, Integer size);
 
     ActionResult create(FeedbackInDto feedbackInDto);
 
