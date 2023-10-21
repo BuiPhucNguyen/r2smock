@@ -67,6 +67,7 @@ public class BrandServiceImpl implements BrandService {
         
         Brand brand = new Brand();
         brand.setName(brandIn.getName());
+        brand.setStatus(false);
         
         Brand brandTemp = brandReponsitory.save(brand);
         

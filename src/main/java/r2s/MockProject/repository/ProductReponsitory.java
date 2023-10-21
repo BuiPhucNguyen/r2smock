@@ -14,5 +14,5 @@ public interface ProductReponsitory extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.brand.id = :brandId and p.status = true and p.brand.status = true")
     Page<Product> getActiveProductByActiveBrand(@Param("brandId") int brandId, Pageable pageable);
     
-    Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Product> findByNameContainingIgnoreCaseAndStatusIsTrue(String name, Pageable pageable);
 }

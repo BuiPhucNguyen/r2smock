@@ -128,10 +128,6 @@ public class OrderServiceImpl implements OrderService{
 		
 		Order orderTemp = orderRepository.save(order);
 		result.setData(OrderModel.transform(orderTemp));
-		
-		if (result.getErrorCodeEnum()!=ErrorCodeEnum.OK) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-		}
 		return result;
 	}
 

@@ -175,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
 	public ActionResult findByNameContainingIgnoreCase(String name, Integer page, Integer size) {
 		ActionResult result = new ActionResult();
 
-        Page<Product> productPage = productReponsitory.findByNameContainingIgnoreCase(name, PageRequest.of(page - 1, size));
+        Page<Product> productPage = productReponsitory.findByNameContainingIgnoreCaseAndStatusIsTrue(name, PageRequest.of(page - 1, size));
 
         if (productPage.isEmpty()){
             result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
