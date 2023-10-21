@@ -95,6 +95,11 @@ public class OrderServiceImpl implements OrderService{
 			OrderDetail orderDetail = new OrderDetail();
 			Product product = productReponsitory.getProductById(orderDetailInDto.getProductId());
 			
+			if (product == null || product.getStatus().equals(false)) {
+	            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+	            return result;
+	        }
+			
 			if (product.getStock() < orderDetailInDto.getAmount()) {
 				result.setErrorCodeEnum(ErrorCodeEnum.NO_ENOUGH_PRODUCT_STOCK);
 				

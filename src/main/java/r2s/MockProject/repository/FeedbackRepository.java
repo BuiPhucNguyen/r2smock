@@ -5,9 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import r2s.MockProject.entity.Brand;
+
 import r2s.MockProject.entity.FeedbackProduct;
-import r2s.MockProject.entity.Product;
 
 public interface FeedbackRepository extends JpaRepository<FeedbackProduct, Integer> {
 
@@ -15,4 +14,10 @@ public interface FeedbackRepository extends JpaRepository<FeedbackProduct, Integ
 //    Product getFeedbackStar(@Param("feedbackStar") int feedbackStar);
 //
 //    Page<Product> findByStar(Integer star, Pageable pageable);
+
+	@Query("SELECT f FROM FeedbackProduct f WHERE f.account.id = :productId")
+	Page<FeedbackProduct> getFeedbacksByProductId(@Param("productId") Integer productId, Pageable pageable);
+
+	@Query("SELECT f FROM FeedbackProduct f WHERE f.star = :feedbackStar and f.account.id = :productId")
+	Page<FeedbackProduct> getFeedbacksByStarAndProductId(@Param("productId") Integer productId, @Param("feedbackStar") Integer feedbackStar, Pageable pageable);
 }

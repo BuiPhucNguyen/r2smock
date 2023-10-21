@@ -65,7 +65,9 @@ public class WebSecurityConfig {
 						.requestMatchers(HttpMethod.GET, "/orders/all").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/orders/**").hasAuthority("ROLE_ADMIN")
 						//feedback
-						.requestMatchers("/feedbacks**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/feedbacks/all").hasAuthority("ROLE_ADMIN")
+//						.requestMatchers(HttpMethod.DELETE, "/feedbacks/**").hasAuthority("ROLE_ADMIN")
+//						.requestMatchers(HttpMethod.GET, "/feedbacks/**").permitAll()
 						//other request
 						.anyRequest().authenticated())
 				.exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint()))
