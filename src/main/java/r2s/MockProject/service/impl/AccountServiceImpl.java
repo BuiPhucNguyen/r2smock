@@ -36,9 +36,7 @@ public class AccountServiceImpl implements AccountService {
 			return result;
 		}
 
-		List<AccountModel> accountModels = pageResult.get()
-//				.filter(a -> a.getId()!=1)
-				.map(AccountModel::transform).collect(Collectors.toList());
+		List<AccountModel> accountModels = pageResult.get().map(AccountModel::transform).collect(Collectors.toList());
 
 		AccountOutDto outDto = new AccountOutDto();
 		outDto.setAccounts(accountModels);
@@ -74,6 +72,13 @@ public class AccountServiceImpl implements AccountService {
 		} else {
 			accountTemp.setFirstName(newAccount.getFirstName());
 			accountTemp.setLastName(newAccount.getLastName());
+
+			if (accountRepository.findByEmail(newAccount.getEmail()) != null) {
+				result.setErrorCodeEnum(ErrorCodeEnum.EXISTED_EMAIL_ACCOUNT);
+				return result;
+			} else {
+				accountTemp.setEmail(newAccount.getEmail());
+			}
 		}
 
 		Account accountUpdate = accountRepository.save(accountTemp);

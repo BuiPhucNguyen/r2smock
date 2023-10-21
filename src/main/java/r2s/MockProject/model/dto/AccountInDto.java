@@ -8,4 +8,5 @@ import lombok.Data;
 public class AccountInDto {
 	private String firstName;
 	private String lastName;
+	private String email;
 }
