@@ -7,7 +7,7 @@ public interface FeedbackService {
 
     ActionResult getAll(Integer page, Integer size);
 
-    ActionResult getByStar(Integer star, Integer page, Integer size);
+//    ActionResult getByStar(Integer star, Integer page, Integer size);
 
     ActionResult create(FeedbackInDto feedbackInDto);
 

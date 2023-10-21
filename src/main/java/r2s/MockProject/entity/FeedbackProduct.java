@@ -19,11 +19,11 @@ public class FeedbackProduct {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
-    @Column(name = "star", columnDefinition = "int")
+    @Column(name = "star", columnDefinition = "bigint(20)")
     private Integer star;
 
     @Column(name = "content", columnDefinition = "text")

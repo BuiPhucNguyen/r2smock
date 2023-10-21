@@ -45,44 +45,44 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
-        outDto.setFeedbackModels(feedbackModels);
+        outDto.setFeedbacks(feedbackModels);
         outDto.setTotal(feedbackModels.size());
 
         result.setData(outDto);
         return result;
     }
 
-    @Override
-    public ActionResult getByStar(Integer star, Integer page, Integer size) {
-        ActionResult result = new ActionResult();
-        Page<FeedbackProduct> feedbacksPage = feedbackRepository.findAll(PageRequest.of(page - 1, size));
-        if (feedbacksPage.isEmpty()){
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
-
-        List<FeedbackModel> feedbackModels = feedbacksPage.stream()
-                .map(FeedbackModel::transform)
-                .filter(s -> s.getStar().equals(star))
-                .collect(Collectors.toList());
-        if (feedbackModels.isEmpty()) {
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
-
-        FeedbackOutDto outDto = new FeedbackOutDto();
-        outDto.setFeedbackModels(feedbackModels);
-        outDto.setTotal(feedbackModels.size());
-
-        result.setData(outDto);
-        return result;
-    }
+//    @Override
+//    public ActionResult getByStar(Integer star, Integer page, Integer size) {
+//        ActionResult result = new ActionResult();
+//        Page<FeedbackProduct> feedbacksPage = feedbackRepository.findAll(PageRequest.of(page - 1, size));
+//        if (feedbacksPage.isEmpty()){
+//            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+//            return result;
+//        }
+//
+//        List<FeedbackModel> feedbackModels = feedbacksPage.stream()
+//                .map(FeedbackModel::transform)
+//                .filter(s -> s.getStar().equals(star))
+//                .collect(Collectors.toList());
+//        if (feedbackModels.isEmpty()) {
+//            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+//            return result;
+//        }
+//
+//        FeedbackOutDto outDto = new FeedbackOutDto();
+//        outDto.setFeedbackModels(feedbackModels);
+//        outDto.setTotal(feedbackModels.size());
+//
+//        result.setData(outDto);
+//        return result;
+//    }
 
     @Override
     public ActionResult create(FeedbackInDto feedbackInDto) {
         ActionResult result = new ActionResult();
         FeedbackProduct feedback = new FeedbackProduct();
-        Product product = productReponsitory.getReferenceById(feedbackInDto.getId());
+        Product product = productReponsitory.getReferenceById(feedbackInDto.getProductid());
         if (product == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
@@ -106,6 +106,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public ActionResult delete(Integer id) {
         ActionResult result = new ActionResult();
         FeedbackProduct feedbackProduct = feedbackRepository.getReferenceById(id);
+        
         if (feedbackProduct == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
         }

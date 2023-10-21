@@ -1,5 +1,7 @@
 package r2s.MockProject.model.entity;
 
+import java.util.Date;
+
 import lombok.Builder;
 import lombok.Data;
 import r2s.MockProject.entity.FeedbackProduct;
@@ -9,17 +11,19 @@ import r2s.MockProject.entity.FeedbackProduct;
 public class FeedbackModel {
     private Integer id;
     private Integer productId;
-    private String name;
+    private Integer accountId;
     private Integer star;
     private String content;
+    private Date createdDate;
 
-    public static FeedbackModel transform(FeedbackProduct enity){
+    public static FeedbackModel transform(FeedbackProduct entity){
         return FeedbackModel.builder()
-                .id(enity.getId())
-                .productId(enity.getProduct().getId())
-                .name(enity.getAccount().getLastName())
-                .star(enity.getStar())
-                .content(enity.getContent())
+                .id(entity.getId())
+                .productId(entity.getProduct().getId())
+                .accountId(entity.getAccount().getId())
+                .star(entity.getStar())
+                .content(entity.getContent())
+                .createdDate(entity.getCreateDate())
                 .build();
     }
 }
