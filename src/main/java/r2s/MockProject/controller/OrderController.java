@@ -1,5 +1,7 @@
 package r2s.MockProject.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +64,18 @@ public class OrderController {
 			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
 		}
 		return responseBuild.build(result);
+	}
+	
+	@GetMapping("/export")
+	public ResponseModel exportOrderss(@RequestParam List<Integer> orderId, @RequestParam String filePath) {
+		ActionResult result = null;
+		try {
+			result = orderService.exportOrder(orderId, filePath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+		}
+		return responseBuild.build(result); 
 	}
 	
 	@PutMapping("/complete/{orderId}")

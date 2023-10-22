@@ -1,5 +1,7 @@
 package r2s.MockProject.controller;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import r2s.MockProject.enums.ErrorCodeEnum;
@@ -56,6 +58,18 @@ public class ProductController {
         ActionResult result = null;
         try {
             result = productService.findByNameContainingIgnoreCase(name, page, size);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
+    
+    @GetMapping("/price/{minPrice}/to/{maxPrice}") // user admin
+    public ResponseModel findByStatusIsTrueAndPriceBetween(@PathVariable BigDecimal minPrice, @PathVariable BigDecimal maxPrice,
+    		@RequestParam Integer page,@RequestParam Integer size){
+        ActionResult result = null;
+        try {
+            result = productService.findByStatusIsTrueAndPriceBetween(minPrice, maxPrice, page, size);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }

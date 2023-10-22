@@ -30,22 +30,22 @@ public class FeedbackController {
         return responseBuild.build(result);
     }
 
-    @GetMapping("/star/{star}")
-    public ResponseModel  getAllByProduct(@PathVariable Integer id, @RequestParam Integer page, @RequestParam Integer size){
+    @GetMapping("/product/{productId}")
+    public ResponseModel  getAllFeedbackByProduct(@PathVariable Integer productId, @RequestParam Integer page, @RequestParam Integer size){
         ActionResult result = null;
         try {
-            result = feedbackService.getAllFeedbackByProduct(id, page, size);
+            result = feedbackService.getAllFeedbackByProduct(productId, page, size);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }
         return responseBuild.build(result);
     }
 
-    @GetMapping("/star/{star}")
-    public ResponseModel  getAllByStarAndProduct(@PathVariable Integer id,@PathVariable Integer star, @RequestParam Integer page, @RequestParam Integer size){
+    @GetMapping("/product/{productId}/star/{star}")
+    public ResponseModel  getAllByStarAndProduct(@PathVariable Integer productId,@PathVariable Integer star, @RequestParam Integer page, @RequestParam Integer size){
         ActionResult result = null;
         try {
-            result = feedbackService.getAllByStarAndProduct(star, id, page, size);
+            result = feedbackService.getAllByStarAndProduct(productId, star, page, size);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }

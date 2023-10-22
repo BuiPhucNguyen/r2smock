@@ -1,5 +1,7 @@
 package r2s.MockProject.service;
 
+import java.math.BigDecimal;
+
 import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.dto.ProductInDto;
 
@@ -19,4 +21,6 @@ public interface ProductService {
     ActionResult updateStatus(Integer id, boolean status);
     
     ActionResult findByNameContainingIgnoreCase(String name, Integer page, Integer size);
+    
+    ActionResult findByStatusIsTrueAndPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Integer page, Integer size);
 }

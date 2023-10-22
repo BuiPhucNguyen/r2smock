@@ -16,6 +16,7 @@ import r2s.MockProject.repository.BrandReponsitory;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -175,6 +176,28 @@ public class ProductServiceImpl implements ProductService {
 		ActionResult result = new ActionResult();
 
         Page<Product> productPage = productReponsitory.findByNameContainingIgnoreCaseAndStatusIsTrue(name, PageRequest.of(page - 1, size));
+
+        if (productPage.isEmpty()){
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
+
+        List<ProductModel> productModels = productPage.stream().map(ProductModel::transform).collect(Collectors.toList());
+
+        ProductOutDto OutDto = new ProductOutDto();
+        OutDto.setProducts(productModels);
+        OutDto.setTotal(productModels.size());
+
+        result.setData(OutDto);
+        return result;
+	}
+
+	@Override
+	public ActionResult findByStatusIsTrueAndPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Integer page,
+			Integer size) {
+		ActionResult result = new ActionResult();
+
+        Page<Product> productPage = productReponsitory.findByStatusIsTrueAndPriceBetween(minPrice,maxPrice,PageRequest.of(page - 1, size));
 
         if (productPage.isEmpty()){
             result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);

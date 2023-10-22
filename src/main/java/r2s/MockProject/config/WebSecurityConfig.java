@@ -63,6 +63,7 @@ public class WebSecurityConfig {
 						.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
 						//order
 						.requestMatchers(HttpMethod.GET, "/orders/all").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.GET, "/orders/export").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/orders/**").hasAuthority("ROLE_ADMIN")
 						//feedback
 						.requestMatchers(HttpMethod.GET, "/feedbacks/all").hasAuthority("ROLE_ADMIN")
