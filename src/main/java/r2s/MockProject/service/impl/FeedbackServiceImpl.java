@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import r2s.MockProject.entity.Account;
 import r2s.MockProject.entity.FeedbackProduct;
 import r2s.MockProject.entity.Product;
 import r2s.MockProject.enums.ErrorCodeEnum;
@@ -12,9 +13,11 @@ import r2s.MockProject.model.ActionResult;
 import r2s.MockProject.model.dto.FeedbackInDto;
 import r2s.MockProject.model.dto.FeedbackOutDto;
 import r2s.MockProject.model.entity.FeedbackModel;
+import r2s.MockProject.repository.AccountRepository;
 import r2s.MockProject.repository.FeedbackRepository;
 import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.FeedbackService;
+import r2s.MockProject.utils.CurrentUserUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +31,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Autowired
     private ProductReponsitory productReponsitory;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Override
     public ActionResult getAll(Integer page, Integer size) {
@@ -108,6 +114,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
         outDto.setTotal(feedbackModels.size());
+
+        result.setData(outDto);
         return result;
     }
 
@@ -115,6 +123,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public ActionResult create(FeedbackInDto feedbackInDto) {
         ActionResult result = new ActionResult();
+
         FeedbackProduct feedback = new FeedbackProduct();
         Product product = productReponsitory.getProductById(feedbackInDto.getProductId());
         if (product == null) {
@@ -122,6 +131,12 @@ public class FeedbackServiceImpl implements FeedbackService {
             return result;
         }
 
+        Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
+        if (account == null) {
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+        }
+
+        feedback.setAccount(account);
         feedback.setProduct(product);
         feedback.setStar(feedbackInDto.getStar());
         feedback.setContent(feedbackInDto.getContent());
