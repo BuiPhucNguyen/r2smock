@@ -16,4 +16,8 @@ public interface FeedbackService {
 //    ActionResult updateContent(FeedbackInDto feedbackInDto);
 
     ActionResult delete(Integer id);
+    
+    ActionResult findAverageStarByProductId(Integer id);
+    
+    ActionResult deleteByActiveAccount(Integer id);
 }

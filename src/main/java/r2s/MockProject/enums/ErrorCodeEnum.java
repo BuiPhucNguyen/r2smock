@@ -21,6 +21,7 @@ public enum ErrorCodeEnum {
 	CANT_COMPLETE_CANCELED_ODER(400, 40009, "Can't complete canceled order"),
 	INVALID_NUMBER_PRODUCT_STOCK(400, 40010, "The number of stock product must be >= 0"),
 	FILE_PATH_EXPORT_EXISTED(400, 40011, "Filepath is existed"),
+	NOT_CREATED_BY_ACTIVE_ACCOUNT(400, 40012, "Not created by active account"),
 	INTERNAL_SERVER_ERROR(500, 50000, "Internal Server Error"), 
 	FORBIDDEN(403, 403, "Access is denied"),
 	UNAUTHORIZED(401, 401, "Not authenticated"),

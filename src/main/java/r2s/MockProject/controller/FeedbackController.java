@@ -51,6 +51,17 @@ public class FeedbackController {
         }
         return responseBuild.build(result);
     }
+    
+    @GetMapping("/avgstar/product/{productId}")
+    public ResponseModel  findAverageStarByProductId(@PathVariable Integer productId){
+        ActionResult result = null;
+        try {
+            result = feedbackService.findAverageStarByProductId(productId);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
 
     @PostMapping("/")
     public ResponseModel create(@RequestBody FeedbackInDto feedbackInDto){
@@ -79,6 +90,17 @@ public class FeedbackController {
         ActionResult result = null;
         try {
             result = feedbackService.delete(id);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
+    
+    @DeleteMapping("/removemine/{id}")
+    public ResponseModel  deleteByActiveAccount(@PathVariable Integer id){
+        ActionResult result = null;
+        try {
+            result = feedbackService.deleteByActiveAccount(id);
         }catch (Exception e){
             result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }

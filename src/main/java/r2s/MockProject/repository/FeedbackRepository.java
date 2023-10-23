@@ -20,4 +20,7 @@ public interface FeedbackRepository extends JpaRepository<FeedbackProduct, Integ
 
 	@Query("SELECT f FROM FeedbackProduct f WHERE f.star = :feedbackStar and f.product.id = :productId")
 	Page<FeedbackProduct> getFeedbacksByStarAndProductId(@Param("productId") Integer productId, @Param("feedbackStar") Integer feedbackStar, Pageable pageable);
+	
+	@Query("SELECT AVG(f.star) FROM FeedbackProduct f WHERE f.product.id = :productId")
+    Double findAverageStarByProductId(@Param("productId") Integer productId);
 }

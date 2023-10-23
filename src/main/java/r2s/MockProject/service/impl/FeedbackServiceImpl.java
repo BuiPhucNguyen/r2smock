@@ -152,6 +152,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         
         if (feedbackProduct == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
         }
         FeedbackProduct feedbackProductDelete = feedbackProduct;
 
@@ -160,4 +161,44 @@ public class FeedbackServiceImpl implements FeedbackService {
         result.setData(FeedbackModel.transform(feedbackProductDelete));
         return result;
     }
+
+	@Override
+	public ActionResult findAverageStarByProductId(Integer id) {
+		ActionResult result = new ActionResult();
+		
+		Product product = productReponsitory.getProductById(id);
+		if (product == null) {
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
+        }
+		
+		Double avgStar = feedbackRepository.findAverageStarByProductId(id);
+		
+		result.setData(avgStar);
+		return result;
+	}
+
+	@Override
+	public ActionResult deleteByActiveAccount(Integer id) {
+		ActionResult result = new ActionResult();
+		
+		FeedbackProduct feedbackProduct = feedbackRepository.getReferenceById(id);
+        
+        if (feedbackProduct == null) {
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
+        }
+        
+        Account acitveAccount = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
+        if (!feedbackProduct.getAccount().getId().equals(acitveAccount.getId())) {
+        	 result.setErrorCodeEnum(ErrorCodeEnum.NOT_CREATED_BY_ACTIVE_ACCOUNT);
+             return result;
+		}
+        
+        FeedbackProduct feedbackProductDelete = feedbackProduct;
+        feedbackRepository.delete(feedbackProduct);
+        result.setData(FeedbackModel.transform(feedbackProductDelete));
+		
+		return result;
+	}
 }
