@@ -19,6 +19,7 @@ import r2s.MockProject.repository.ProductReponsitory;
 import r2s.MockProject.service.FeedbackService;
 import r2s.MockProject.utils.CurrentUserUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,10 +48,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         List<FeedbackModel> feedbackModels = feedbacksPage.stream().map(FeedbackModel::transform).collect(Collectors.toList());
-        if (feedbackModels.isEmpty()) {
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
@@ -78,10 +75,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         List<FeedbackModel> feedbackModels = feedbacksPage.stream()
                 .map(FeedbackModel::transform)
                 .collect(Collectors.toList());
-        if (feedbackModels.isEmpty()) {
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
@@ -140,6 +133,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedback.setProduct(product);
         feedback.setStar(feedbackInDto.getStar());
         feedback.setContent(feedbackInDto.getContent());
+        feedback.setCreateDate(new Date());
 
         FeedbackProduct feedbackSave = feedbackRepository.save(feedback);
         if (feedbackSave == null) {
