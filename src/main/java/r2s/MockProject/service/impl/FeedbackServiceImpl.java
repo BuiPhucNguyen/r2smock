@@ -48,10 +48,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         List<FeedbackModel> feedbackModels = feedbacksPage.stream().map(FeedbackModel::transform).collect(Collectors.toList());
-        if (feedbackModels.isEmpty()) {
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
@@ -79,10 +75,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         List<FeedbackModel> feedbackModels = feedbacksPage.stream()
                 .map(FeedbackModel::transform)
                 .collect(Collectors.toList());
-        if (feedbackModels.isEmpty()) {
-            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
-            return result;
-        }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
@@ -123,8 +115,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public ActionResult create(FeedbackInDto feedbackInDto) {
         ActionResult result = new ActionResult();
-
         FeedbackProduct feedback = new FeedbackProduct();
+        
         Product product = productReponsitory.getProductById(feedbackInDto.getProductId());
         if (product == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
@@ -132,7 +124,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
-        if (account == null) {
+        if (account == null || account.getStatus() == false) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
