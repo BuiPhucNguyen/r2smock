@@ -13,7 +13,7 @@ public interface FeedbackService {
 
     ActionResult create(FeedbackInDto feedbackInDto);
 
-//    ActionResult updateContent(FeedbackInDto feedbackInDto);
+    ActionResult updateContentAndStar(Integer id, FeedbackInDto feedbackInDto);
 
     ActionResult delete(Integer id);
     

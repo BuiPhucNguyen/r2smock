@@ -10,6 +10,8 @@ public enum ErrorCodeEnum {
 	NO_HAVE_ID_BRAND(204, 20402, "Not have data for brand"),
 	NO_ENOUGH_PRODUCT_STOCK(204, 20403, "Not enough stock for product"), 
 	BAD_REQUEST(400, 40000, "Bad request"),
+
+	WRONG_STAR(400, 40000, "WRONG type or number star"),
 	INVALID_ENTITY(400, 40001, "Entity not exist"), 
 	INVALID_CREATE(400, 40002, "Create not success"),
 	INVALID_DELETE(400, 40004, "Delete not success, entity is used"), 

@@ -48,6 +48,10 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         List<FeedbackModel> feedbackModels = feedbacksPage.stream().map(FeedbackModel::transform).collect(Collectors.toList());
+        if (feedbackModels.isEmpty()) {
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
@@ -75,6 +79,10 @@ public class FeedbackServiceImpl implements FeedbackService {
         List<FeedbackModel> feedbackModels = feedbacksPage.stream()
                 .map(FeedbackModel::transform)
                 .collect(Collectors.toList());
+        if (feedbackModels.isEmpty()) {
+            result.setErrorCodeEnum(ErrorCodeEnum.NO_CONTENT);
+            return result;
+        }
 
         FeedbackOutDto outDto = new FeedbackOutDto();
         outDto.setFeedbacks(feedbackModels);
@@ -112,7 +120,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         return result;
     }
 
-
     @Override
     public ActionResult create(FeedbackInDto feedbackInDto) {
         ActionResult result = new ActionResult();
@@ -127,6 +134,12 @@ public class FeedbackServiceImpl implements FeedbackService {
         Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
         if (account == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
+        }
+
+        if (feedbackInDto.getStar() < 0  || feedbackInDto.getStar() > 5){
+            result.setErrorCodeEnum(ErrorCodeEnum.WRONG_STAR);
+            return result;
         }
 
         feedback.setAccount(account);
@@ -146,13 +159,47 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    public ActionResult updateContentAndStar(Integer id, FeedbackInDto feedbackInDto){
+        ActionResult result = new ActionResult();
+
+        FeedbackProduct feedback = feedbackRepository.getReferenceById(id);
+        if (feedback == null) {
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
+        }
+
+        Account account = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
+        if (account == null) {
+            result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
+            return result;
+        }
+
+        if (feedback.getAccount().equals(account) == false){
+            result.setErrorCodeEnum(ErrorCodeEnum.UNAUTHORIZED);
+            return result;
+        }
+
+        if (feedbackInDto.getStar() < 0  || feedbackInDto.getStar() > 5){
+            result.setErrorCodeEnum(ErrorCodeEnum.WRONG_STAR);
+            return result;
+        }
+
+        feedback.setStar(feedbackInDto.getStar());
+        feedback.setContent(feedbackInDto.getContent());
+        FeedbackProduct feedbackSave = feedbackRepository.save(feedback);
+        result.setData(FeedbackModel.transform(feedbackSave));
+        return result;
+    }
+
+
+
+    @Override
     public ActionResult delete(Integer id) {
         ActionResult result = new ActionResult();
         FeedbackProduct feedbackProduct = feedbackRepository.getReferenceById(id);
         
         if (feedbackProduct == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
-            return result;
         }
         FeedbackProduct feedbackProductDelete = feedbackProduct;
 
@@ -162,43 +209,43 @@ public class FeedbackServiceImpl implements FeedbackService {
         return result;
     }
 
-	@Override
-	public ActionResult findAverageStarByProductId(Integer id) {
-		ActionResult result = new ActionResult();
-		
-		Product product = productReponsitory.getProductById(id);
-		if (product == null) {
+    @Override
+    public ActionResult findAverageStarByProductId(Integer id) {
+        ActionResult result = new ActionResult();
+
+        Product product = productReponsitory.getProductById(id);
+        if (product == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
-		
-		Double avgStar = feedbackRepository.findAverageStarByProductId(id);
-		
-		result.setData(avgStar);
-		return result;
-	}
 
-	@Override
-	public ActionResult deleteByActiveAccount(Integer id) {
-		ActionResult result = new ActionResult();
-		
-		FeedbackProduct feedbackProduct = feedbackRepository.getReferenceById(id);
-        
+        Double avgStar = feedbackRepository.findAverageStarByProductId(id);
+
+        result.setData(avgStar);
+        return result;
+    }
+
+    @Override
+    public ActionResult deleteByActiveAccount(Integer id) {
+        ActionResult result = new ActionResult();
+
+        FeedbackProduct feedbackProduct = feedbackRepository.getReferenceById(id);
+
         if (feedbackProduct == null) {
             result.setErrorCodeEnum(ErrorCodeEnum.INVALID_ENTITY);
             return result;
         }
-        
+
         Account acitveAccount = accountRepository.findByUsername(CurrentUserUtils.getCurrentUsernames());
         if (!feedbackProduct.getAccount().getId().equals(acitveAccount.getId())) {
-        	 result.setErrorCodeEnum(ErrorCodeEnum.NOT_CREATED_BY_ACTIVE_ACCOUNT);
-             return result;
-		}
-        
+            result.setErrorCodeEnum(ErrorCodeEnum.NOT_CREATED_BY_ACTIVE_ACCOUNT);
+            return result;
+        }
+
         FeedbackProduct feedbackProductDelete = feedbackProduct;
         feedbackRepository.delete(feedbackProduct);
         result.setData(FeedbackModel.transform(feedbackProductDelete));
-		
-		return result;
-	}
+
+        return result;
+    }
 }

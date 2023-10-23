@@ -74,16 +74,16 @@ public class FeedbackController {
         return responseBuild.build(result);
     }
 
-//    @GetMapping("")
-//    public ResponseModel  updateContent(@RequestBody FeedbackInDto feedbackInDto){
-//        ActionResult result = null;
-//        try {
-//            result = feedbackService.create(feedbackInDto);
-//        }catch (Exception e){
-//            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
-//        }
-//        return responseBuild.build(result);
-//    }
+    @PutMapping("/update/{id}")
+    public ResponseModel  updateContent(@PathVariable Integer id,@RequestBody FeedbackInDto feedbackInDto){
+        ActionResult result = null;
+        try {
+            result = feedbackService.updateContentAndStar(id, feedbackInDto);
+        }catch (Exception e){
+            result.setErrorCodeEnum(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+        return responseBuild.build(result);
+    }
 
     @DeleteMapping("/remove/{id}")
     public ResponseModel  delete(@PathVariable Integer id){
