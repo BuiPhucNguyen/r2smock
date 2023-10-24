@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 						.requestMatchers("/auths/signup").permitAll()
 						.requestMatchers(HttpMethod.GET,"/accounts/current").authenticated()
 						.requestMatchers(HttpMethod.GET,"/accounts/**").hasAuthority("ROLE_ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/accounts/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/accounts/status/**").hasAuthority("ROLE_ADMIN")
 						//brands
 						.requestMatchers(HttpMethod.GET,"/brands/all").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.POST, "/brands/").hasAuthority("ROLE_ADMIN")
